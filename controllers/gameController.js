@@ -6,7 +6,6 @@ exports.testController = (req,res) => {
 exports.createGame = (req,res) => {
 
     const gameId = Date.now();
-
     games[gameId] = {
 
         gameId : gameId,
@@ -59,7 +58,27 @@ exports.joinGame = (req,res) => {
         role,
         score : role === "guesser" ? 100 : null
     }
-    return res.json({message: "Player joined sucessfully"});
+    return res.json({message: "Player joined successfully"});
+
+}
+exports.setLocation  = (req,res) => {
+
+    const {gameId,playerId,location} = req.body;
+
+    const game = games[gameId];
+    if (!game) {
+        return res.status(404).json({ message: "Game not found" });
+    }
+
+    const player = game.players[playerId];
+
+    if(!player || player.role !== "setter"){
+
+        return res.status(403).json({message : "only setter can set location"})
+
+    }
+    game.location = location;
+    res.json({message:"location set successfully"})
 
 }
 exports.submitGuess = (req,res) => {
@@ -79,10 +98,20 @@ exports.submitGuess = (req,res) => {
 
         if (!player || player.role !== "guesser") {
         return res.status(403).json({
-            message: "Only guesser can submit guesses"
-        });
-    }
-        player.score -= 10;
+                message: "Only guesser can submit guesses"
+            });
+        }
+        
+        if(guess === game.location){
+            game.status = "completed";
+            return res.json({status : game.status,score : player.score})
+
+        }
+        else{
+            player.score -= 10;
+            res.json({message:"incorrect guess"})
+        }
+        
 
         game.guesses.push({playerId,guess,timestamp : new Date()});
         res.json(
