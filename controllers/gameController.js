@@ -12,8 +12,9 @@ exports.createGame = (req,res) => {
         gameId : gameId,
         status : "active",
         createdAt : new Date(),
-        score : 0
-
+        location : null,
+        players:{},
+        guesses: []
     };
 
     res.json({
@@ -34,27 +35,61 @@ exports.getGame = (req,res) => {
             message : "Game not found"
         });
     }
-    
+        
     return res.json(game);
 }
+exports.joinGame = (req,res) => {
 
+    const {gameId,playerId,role} = req.body;
+
+    const game = games[gameId];
+    if (!game) {
+        return res.status(404).json({ message: "Game not found" });
+    }
+    if(game.players[playerId]){
+        return res.json({message:"Player already joined"});
+    }
+    const guess_exists = Object.values(game.players).find(p => p.role === "guesser");
+    if(role === "guesser" && guess_exists){
+        return res.status(400).json({message : "guesser already exists"})
+
+    }
+    game.players[playerId] = {
+
+        role,
+        score : role === "guesser" ? 100 : null
+    }
+    return res.json({message: "Player joined sucessfully"});
+
+}
 exports.submitGuess = (req,res) => {
 
 
-        const {gameId,guess} = req.body;
+        const {gameId,playerId,guess} = req.body;
 
-
-        if(!gameId||!guess){
-            return res.status(400).json({message : "game id and geuss are required"})
+        if(!gameId||!playerId||!guess){
+            return res.status(400).json({message : "game id ,player id and guess are required"})
         };
         const game = games[gameId];
 
         if(!game){
             return res.status(404).json({message:"game not found"});
         }
-        game.score -= 10;
-        game.lastguess = guess;
+        const player = game.players[playerId];
 
-        res.json({message : "guess received" , gameId : gameId,guess : guess,score : game.score})
+        if (!player || player.role !== "guesser") {
+        return res.status(403).json({
+            message: "Only guesser can submit guesses"
+        });
+    }
+        player.score -= 10;
+
+        game.guesses.push({playerId,guess,timestamp : new Date()});
+        res.json(
+            {   
+                message : "guess received", 
+                guesses : game.guesses,
+                score : player.score, 
+            });
 
 }
