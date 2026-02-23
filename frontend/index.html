@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<meta charset="UTF-8">
+<title>GeoGuess Game</title>
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="game-container">
+
+<h1 class="title">🌍 GEO GUESS</h1>
+
+<div class="game-board">
+
+<div class="map-area">
+    <div id="map"></div>
+</div>
+
+<div class="control-panel">
+
+<div class="hints">
+<h2>Hints</h2>
+<p>Continent: <span id="continent">?</span></p>
+<p>Country: <span id="country">?</span></p>
+<p>State: <span id="state">?</span></p>
+<p>City: <span id="city">?</span></p>
+</div>
+
+<div class="guess-box">
+<input type="text" id="guessInput" placeholder="Guess the location...">
+<button onclick="submitGuess()">Guess</button>
+</div>
+
+<div class="score">
+<h2>Score</h2>
+<p>Player1 : <span id="score1">0</span></p>
+<p>Player2 : <span id="score2">0</span></p>
+</div>
+
+</div>
+
+</div>
+
+<div class="log-box">
+<h3>Game Log</h3>
+<ul id="gameLog"></ul>
+</div>
+
+</div>
+
+<script src="script.js"></script>
+
+</body>
+</html>
