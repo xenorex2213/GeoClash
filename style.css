@@ -1,0 +1,113 @@
+body{
+margin:0;
+font-family:Arial;
+background: radial-gradient(circle,#1f1c2c,#0f2027);
+color:white;
+text-align:center;
+}
+
+.title{
+animation: glow 2s ease-in-out infinite alternate;
+}
+
+@keyframes glow{
+from{
+text-shadow:0 0 10px #00ffff;
+}
+to{
+text-shadow:0 0 25px #00ffff, 0 0 40px #00ffff;
+}
+}
+
+.game-container{
+width:90%;
+margin:auto;
+}
+
+.game-board{
+display:flex;
+justify-content:center;
+align-items:center;
+gap:40px;
+margin-top:30px;
+}
+
+.map-area{
+padding:10px;
+border-radius:20px;
+box-shadow:0 0 20px #00ffff;
+background:#0b1e2d;
+}
+
+.map{
+width:700px;
+max-width:100%;
+border-radius:15px;
+display:block;
+}
+
+.control-panel{
+display:flex;
+flex-direction:column;
+gap:20px;
+}
+
+.hints{
+background:#161b22;
+padding:20px;
+border-radius:15px;
+box-shadow:0 0 15px #00ffff;
+}
+
+.score{
+background:#161b22;
+padding:20px;
+border-radius:15px;
+box-shadow:0 0 15px #00ffff;
+}
+
+.guess-box{
+display:flex;
+gap:10px;
+justify-content:center;
+}
+
+input{
+padding:10px;
+border:none;
+border-radius:10px;
+width:180px;
+}
+
+button{
+padding:10px 20px;
+border:none;
+border-radius:10px;
+background:#00ffff;
+font-weight:bold;
+cursor:pointer;
+transition:0.3s;
+}
+
+button:hover{
+transform:scale(1.1);
+background:#00bcd4;
+}
+
+.log-box{
+margin-top:30px;
+background:#161b22;
+padding:20px;
+border-radius:15px;
+width:60%;
+margin-left:auto;
+margin-right:auto;
+box-shadow:0 0 15px #00ffff;
+}
+
+#map{
+width:700px;
+height:400px;
+border-radius:15px;
+box-shadow:0 0 20px #00ffff;
+}
