@@ -2,8 +2,9 @@
 let playerId = "";
 let gameId = "";
 let pollingInterval;
+let latestHint = "";
 
-const BASE_URL = "http://localhost:3000/api/game"
+const BASE_URL = "/api/game"
 function showPage(pageId) {
     document.getElementById("loginPage").style.display = "none";
     document.getElementById("mainPage").style.display = "none";
@@ -21,58 +22,106 @@ function startPolling() {
     pollingInterval = setInterval(async () => {
         if (!gameId) return;
 
-        const res = await fetch(`${BASE_URL}/${gameId}`);
+        const res = await fetch(`${BASE_URL}/${gameId}?playerId=${playerId}`);
         const data = await res.json();
 
         // If game started
-       if (data.status === "playing") {
+        if (data.status === "playing") {
 
-    // Only switch once
-    if (document.getElementById("gamePage").style.display !== "block") {
+            // Only switch once
+            if (document.getElementById("gamePage").style.display !== "block") {
 
-        showPage("gamePage");
+                showPage("gamePage");
 
-        const role = data.players[playerId].role;
+                const role = data.players[playerId].role;
 
-        document.getElementById("roleDisplay").innerText =
-            "Your Role: " + role.toUpperCase();
+                document.getElementById("roleDisplay").innerText =
+                    "Your Role: " + role.toUpperCase();
 
-        if (role === "setter") {
-            document.getElementById("setterSection").style.display = "block";
-        } else {
-            document.getElementById("guesserSection").style.display = "block";
+                if (role === "setter") {
+                    document.getElementById("setterSection").style.display = "block";
+                } else {
+                    document.getElementById("guesserSection").style.display = "block";
+                }
+            }
+
+            // Show location info for setter
+            if (data.location && data.players[playerId].role === "setter") {
+                const loc = data.location;
+                document.getElementById("locationInfo").style.display = "block";
+                document.getElementById("locationInfo").innerHTML =
+                    `<strong>📍 Location Set:</strong> ${loc.city}, ${loc.state || ''}, ${loc.country || ''}<br>` +
+                    `<strong>🌍 Continent:</strong> ${loc.continent || 'N/A'}<br>` +
+                    `<strong>📌 Coordinates:</strong> ${loc.lat}, ${loc.lng}`;
+            }
+
+            // Show wrong attempts count
+            if (data.wrongAttempts !== undefined && data.wrongAttempts > 0) {
+                document.getElementById("attemptsDisplay").style.display = "block";
+                document.getElementById("attemptsDisplay").innerText =
+                    "Wrong Attempts: " + data.wrongAttempts;
+            }
         }
-    }
-}
-    if (data.guesses && data.guesses.length > 0) {
-    let guessText = "";
 
-    data.guesses.forEach(g => {
-        guessText += g.playerId + " guessed: " + g.guess + "\n";
-    });
+        if (data.guesses && data.guesses.length > 0) {
+            let guessText = "";
 
-    document.getElementById("guessMessage").innerText = guessText;
-}
+            data.guesses.forEach(g => {
+                guessText += g.playerId + " guessed: " + g.guess + "\n";
+            });
+
+            if (latestHint) {
+                guessText += "\n" + latestHint;
+            }
+
+            document.getElementById("guessMessage").innerText = guessText;
+        }
+
+        // Update score display for guesser during polling
+        if (data.players && data.players[playerId]) {
+            const player = data.players[playerId];
+            if (player.role === "guesser") {
+                document.getElementById("scoreDisplay").innerText =
+                    "Score: " + player.score;
+            }
+        }
 
         // If game completed
         if (data.status === "completed") {
             clearInterval(pollingInterval);
+            pollingInterval = null;
 
             showPage("gamePage");
 
             document.getElementById("roleDisplay").innerText =
-                "GAME COMPLETED 🎉";
+                "🎉 ROUND COMPLETED";
 
             const finalScore = data.players[playerId].score;
+            const role = data.players[playerId].role;
 
-            document.getElementById("guessMessage").innerText =
-                "Game Over! Final Score: " + finalScore;
+            let resultText = "Game Over!\n";
+            if (role === "guesser") {
+                resultText += "Your Final Score: " + finalScore + "\n";
+            }
+            if (data.location) {
+                resultText += "The location was: " + data.location.city;
+                if (data.location.country) resultText += ", " + data.location.country;
+            }
+            if (data.guesses && data.guesses.length > 0) {
+                resultText += "\n\nGuess History:\n";
+                data.guesses.forEach(g => {
+                    resultText += "  " + g.playerId + " guessed: " + g.guess + "\n";
+                });
+            }
+
+            document.getElementById("guessMessage").innerText = resultText;
 
             document.getElementById("setterSection").style.display = "none";
             document.getElementById("guesserSection").style.display = "none";
+            document.getElementById("locationInfo").style.display = "none";
         }
 
-    }, 2000);
+    }, 1000);
 }
 function login() {
     playerId = document.getElementById("playerIdInput").value;
@@ -150,18 +199,46 @@ async function assignRole() {
 
 async function setLocation() {
     const location = document.getElementById("locationInput").value;
+    if (!location) {
+        alert("Please enter a location");
+        return;
+    }
 
-    await fetch(`${BASE_URL}/place`, {
+    const res = await fetch(`${BASE_URL}/place`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ gameId, playerId, location })
     });
 
-    alert("Location Set. Waiting for guess...");
+    const data = await res.json();
+
+    if (!res.ok) {
+        alert(data.message || "Error setting location");
+        return;
+    }
+
+    // Show geocoded location details to setter
+    if (data.location) {
+        const loc = data.location;
+        document.getElementById("locationInfo").style.display = "block";
+        document.getElementById("locationInfo").innerHTML =
+            `<strong>📍 Location Set:</strong> ${loc.city}, ${loc.state || ''}, ${loc.country || ''}<br>` +
+            `<strong>🌍 Continent:</strong> ${loc.continent || 'N/A'}<br>` +
+            `<strong>📌 Coordinates:</strong> ${loc.lat}, ${loc.lng}`;
+    }
+
+    document.getElementById("locationInput").disabled = true;
+    document.getElementById("locationInput").value = "";
+    document.getElementById("setLocationBtn").disabled = true;
+    document.getElementById("setLocationBtn").innerText = "✅ Location Set — Waiting for guess...";
 }
 
 async function submitGuess() {
     const guess = document.getElementById("guessInput").value;
+    if (!guess) {
+        alert("Please enter a guess");
+        return;
+    }
 
     const res = await fetch(`${BASE_URL}/guess`, {
         method: "POST",
@@ -171,12 +248,24 @@ async function submitGuess() {
 
     const data = await res.json();
 
+    if (!res.ok) {
+        alert(data.message || "Error submitting guess");
+        return;
+    }
+
+    document.getElementById("guessInput").value = "";
+
     if (data.status === "completed") {
         document.getElementById("guessMessage").innerText =
-            "Correct! Final Score: " + data.score;
+            "🎉 Correct! Final Score: " + data.score;
+        document.getElementById("guessInput").disabled = true;
+        document.getElementById("submitGuessBtn").disabled = true;
     } else {
+        latestHint = data.message;
         document.getElementById("guessMessage").innerText = data.message;
-        document.getElementById("scoreDisplay").innerText =
-            "Score: " + data.score;
+        if (data.score !== undefined) {
+            document.getElementById("scoreDisplay").innerText =
+                "Score: " + data.score;
+        }
     }
 }

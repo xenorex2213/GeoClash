@@ -38,7 +38,7 @@
                 </div>
 
                 <div class="button-card">
-                    <div class="icon">🔗</div>
+                    <div class="icon"></div>
                     <h3>Join Existing Game</h3>
                     <p>Enter a game ID to play with friends</p>
                     <input type="text" id="joinGameIdInput" placeholder="Enter Game ID">
@@ -72,21 +72,28 @@
         <pre id="guessMessage"></pre>
     </div>
 
+    <!-- Location Info (visible to setter) -->
+    <div id="locationInfo" style="display:none;"></div>
+
+    <!-- Wrong Attempts Counter -->
+    <div id="attemptsDisplay" style="display:none;"></div>
+
     <!-- Setter Section -->
     <div id="setterSection" style="display:none;">
         <h3>Setter Panel</h3>
-        <input type="text" id="locationInput" placeholder="Enter Location">
-        <button onclick="setLocation()">Set Location</button>
+        <input type="text" id="locationInput" placeholder="Enter City Name">
+        <button id="setLocationBtn" onclick="setLocation()">Set Location</button>
     </div>
 
     <!-- Guesser Section -->
     <div id="guesserSection" style="display:none;">
         <h3>Guesser Panel</h3>
-        <input type="text" id="guessInput" placeholder="Enter Guess">
-        <button onclick="submitGuess()">Submit Guess</button>
+        <input type="text" id="guessInput" placeholder="Guess the City">
+        <button id="submitGuessBtn" onclick="submitGuess()">Submit Guess</button>
 
         <p id="scoreDisplay"></p>
     </div>
+
 </div>
 
     <script src="script.js"></script>

@@ -373,6 +373,51 @@ button:active {
     margin-bottom: 25px;
     text-shadow: 0 0 15px rgba(0, 212, 255, 0.5);
 }
+/* Location Info (Setter) */
+#locationInfo {
+    background: linear-gradient(135deg, #0a2e1a 0%, #1a3d2e 100%);
+    border: 2px solid #1eff00;
+    border-radius: 10px;
+    padding: 15px 20px;
+    margin: 15px 0;
+    color: #b0bec5;
+    font-size: 0.95em;
+    line-height: 1.8;
+    box-shadow: 0 0 15px rgba(30, 255, 0, 0.15);
+}
+
+#locationInfo strong {
+    color: #1eff00;
+}
+
+/* Wrong Attempts Counter */
+#attemptsDisplay {
+    background: linear-gradient(135deg, #2e0a0a 0%, #3d1a1a 100%);
+    border: 2px solid #ff4444;
+    border-radius: 10px;
+    padding: 12px 20px;
+    margin: 15px 0;
+    color: #ff4444;
+    font-weight: 600;
+    font-size: 1.05em;
+    text-align: center;
+    text-shadow: 0 0 8px rgba(255, 68, 68, 0.4);
+    box-shadow: 0 0 12px rgba(255, 68, 68, 0.15);
+}
+
+/* Disabled button styling */
+button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none !important;
+    box-shadow: none !important;
+}
+
+input:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
 hr {
     margin: 25px 0;
     border: none;
