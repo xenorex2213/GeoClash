@@ -6,20 +6,20 @@ A fun and interactive geography-based game where players guess locations based o
 
 ## 🚀 Features
 
-* 📍 Random location generation
-* 🗺️ Interactive map for guessing
-* 📸 Image-based or street-view clues
-* 🔍 Progressive hint narrowing system
-* 🎮 Multiple rounds gameplay
+📍 Random location generation
+🗺️ Interactive map for guessing
+📸 Image-based or street-view clues
+🔍 Progressive hint narrowing system
+🎮 Multiple rounds gameplay
 
 ---
 
 ## 🛠️ Tech Stack
 
-* Frontend: (e.g., HTML, CSS, JavaScript / React)
-* Backend: (e.g., Node.js / Flask / None)
-* APIs: (e.g., Google Maps API / Mapbox / OpenStreetMap / OpenCage API)
-* Other Tools: (e.g., Leaflet.js)
+Frontend: (e.g., HTML, CSS, JavaScript / React)
+Backend: (e.g., Node.js / Flask / None)
+APIs: (e.g., Google Maps API / Mapbox / OpenStreetMap / OpenCage API)
+Other Tools: (e.g., Leaflet.js)
 
 ---
 
@@ -66,10 +66,10 @@ A fun and interactive geography-based game where players guess locations based o
 
 The game gradually reveals clues to help the player:
 
-* 🌎 Broad hint (e.g., continent)
-* 🌐 Country-level hint
-* 🏙️ Region or city hint
-* 📍 Precise location clue
+🌎 Broad hint (e.g., continent)
+🌐 Country-level hint
+🏙️ Region or city hint
+📍 Precise location clue
 
 This system encourages logical deduction and improves learning of geography over time.
 
@@ -77,11 +77,11 @@ This system encourages logical deduction and improves learning of geography over
 
 ## 🧠 Future Improvements
 
-* 🌐 Multiplayer mode
-* 🏆 Leaderboards based on hint usage
-* 📱 Mobile responsiveness
-* 🌍 More diverse location datasets
-* 🔊 Sound effects & animations
+🌐 Multiplayer mode
+🏆 Leaderboards based on hint usage
+📱 Mobile responsiveness
+🌍 More diverse location datasets
+🔊 Sound effects & animations
 
 
 ---
@@ -94,13 +94,13 @@ This project is licensed under the MIT License.
 
 ## 🙌 Acknowledgements
 
-* OpenCage API
+OpenCage API
 
 ---
 
 ## 👤 Author
 
-* xenorex2213
-* GitHub: https://github.com/xenorex2213
+xenorex2213
+GitHub: https://github.com/xenorex2213
 
 ---
