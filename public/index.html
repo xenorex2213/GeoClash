@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Guess The Location</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- LOGIN PAGE -->
+    <div id="loginPage">
+        <div class="map-bg"></div>
+        <div class="login-container">
+            <div class="title-section">
+                <img src="earth-icon.png" alt="Earth" class="earth-icon">
+                <h1>GeoClash</h1>
+            </div>
+            <p class="subtitle">Test Your Geographic Knowledge</p>
+            <input type="text" id="playerIdInput" placeholder="Enter Player ID">
+            <button onclick="login()">Continue</button>
+        </div>
+    </div>
+
+    <!-- MAIN MENU -->🎉
+    <div id="mainPage" style="display:none;" class="main-page-container">
+        <div class="map-grid-bg"></div>
+        <div class="main-content">
+            <div class="welcome-section">
+                <h1>Welcome to Geo Guessing Game</h1>
+                <p class="subtitle">Challenge your friends to guess locations</p>
+            </div>
+
+            <div class="action-buttons">
+                <div class="button-card">
+                    <div class="icon">➕</div>
+                    <h3>Create New Game</h3>
+                    <p>Start a new game and become the setter</p>
+                    <button onclick="createGame()">Create</button>
+                </div>
+
+                <div class="button-card">
+                    <div class="icon"></div>
+                    <h3>Join Existing Game</h3>
+                    <p>Enter a game ID to play with friends</p>
+                    <input type="text" id="joinGameIdInput" placeholder="Enter Game ID">
+                    <button onclick="joinGame()">Join</button>
+                </div>
+            </div>
+
+            <p id="mainMessage" class="status-message"></p>
+        </div>
+    </div>
+
+    <!-- WAITING PAGE -->
+    <div id="waitingPage" style="display:none;">
+        <h2>Waiting Room</h2>
+
+        <p><strong>Game ID:</strong> <span id="displayGameId"></span></p>
+        <p>Share this Game ID with Player 2.</p>
+
+        <button onclick="assignRole()">Start Game</button>
+
+        <p id="waitingMessage"></p>
+    </div>
+
+    <!-- GAME PAGE -->
+<div id="gamePage" style="display:none;">
+    <h2 id="roleDisplay"></h2>
+
+    <!-- 🔥 Shared Guess History -->
+    <div>
+        <h3>Game Updates</h3>
+        <pre id="guessMessage"></pre>
+    </div>
+
+    <!-- Location Info (visible to setter) -->
+    <div id="locationInfo" style="display:none;"></div>
+
+    <!-- Wrong Attempts Counter -->
+    <div id="attemptsDisplay" style="display:none;"></div>
+
+    <!-- Setter Section -->
+    <div id="setterSection" style="display:none;">
+        <h3>Setter Panel</h3>
+        <input type="text" id="locationInput" placeholder="Enter City Name">
+        <button id="setLocationBtn" onclick="setLocation()">Set Location</button>
+    </div>
+
+    <!-- Guesser Section -->
+    <div id="guesserSection" style="display:none;">
+        <h3>Guesser Panel</h3>
+        <input type="text" id="guessInput" placeholder="Guess the City">
+        <button id="submitGuessBtn" onclick="submitGuess()">Submit Guess</button>
+
+        <p id="scoreDisplay"></p>
+    </div>
+
+</div>
+
+    <script src="script.js"></script>
+</body>
+</html>
