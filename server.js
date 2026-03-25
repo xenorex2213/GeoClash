@@ -1,4 +1,5 @@
 require("dotenv").config();
+require("./models/db")
 const express = require("express");
 const app = express();
 const gameRoutes = require("./routes/gameRoutes");
