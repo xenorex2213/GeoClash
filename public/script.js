@@ -2,7 +2,6 @@
 let playerId = "";
 let gameId = "";
 let pollingInterval;
-let latestHint = "";
 
 const BASE_URL = "/api/game"
 function showPage(pageId) {
@@ -50,9 +49,9 @@ function startPolling() {
                 const loc = data.location;
                 document.getElementById("locationInfo").style.display = "block";
                 document.getElementById("locationInfo").innerHTML =
-                    `<strong>📍 Location Set:</strong> ${loc.city}, ${loc.state || ''}, ${loc.country || ''}<br>` +
-                    `<strong>🌍 Continent:</strong> ${loc.continent || 'N/A'}<br>` +
-                    `<strong>📌 Coordinates:</strong> ${loc.lat}, ${loc.lng}`;
+                    `<strong>Location Set:</strong> ${loc.city}, ${loc.state || ''}, ${loc.country || ''}<br>` +
+                    `<strong>Continent:</strong> ${loc.continent || 'N/A'}<br>` +
+                    `<strong>Coordinates:</strong> ${loc.lat}, ${loc.lng}`;
             }
 
             // Show wrong attempts count
@@ -63,22 +62,32 @@ function startPolling() {
             }
         }
 
-        if (data.guesses && data.guesses.length > 0) {
-            let guessText = "";
+        if (data.guesses) {
+                let guessText = "";
 
-            data.guesses.forEach(g => {
-                guessText += g.playerId + " guessed: " + g.guess + "\n";
-            });
+                data.guesses.forEach(g => {
+                    guessText += g.playerId + " guessed: " + g.guess + "\n";
+                });
 
-            if (latestHint) {
-                guessText += "\n" + latestHint;
+            if (data.revealedHints && data.revealedHints.length > 0) {
+                if(data.revealedHints.length >= 3){
+                    guessText += "\nAll Hints\n"
+                }
+                else{
+                    guessText += "\nHints\n"
+                }
+                data.revealedHints.forEach(h => {
+                    guessText += h + "\n";
+                });
             }
-
             document.getElementById("guessMessage").innerText = guessText;
-        }
+        
+
+    }
+
 
         // Update score display for guesser during polling
-        if (data.players && data.players[playerId]) {
+        if(data.players && data.players[playerId]) {
             const player = data.players[playerId];
             if (player.role === "guesser") {
                 document.getElementById("scoreDisplay").innerText =
@@ -94,7 +103,7 @@ function startPolling() {
             showPage("gamePage");
 
             document.getElementById("roleDisplay").innerText =
-                "🎉 ROUND COMPLETED";
+                "ROUND COMPLETED";
 
             const finalScore = data.players[playerId].score;
             const role = data.players[playerId].role;
@@ -222,15 +231,15 @@ async function setLocation() {
         const loc = data.location;
         document.getElementById("locationInfo").style.display = "block";
         document.getElementById("locationInfo").innerHTML =
-            `<strong>📍 Location Set:</strong> ${loc.city}, ${loc.state || ''}, ${loc.country || ''}<br>` +
-            `<strong>🌍 Continent:</strong> ${loc.continent || 'N/A'}<br>` +
-            `<strong>📌 Coordinates:</strong> ${loc.lat}, ${loc.lng}`;
+            `<strong>Location Set:</strong> ${loc.city}, ${loc.state || ''}, ${loc.country || ''}<br>` +
+            `<strong>Continent:</strong> ${loc.continent || 'N/A'}<br>` +
+            `<strong>Coordinates:</strong> ${loc.lat}, ${loc.lng}`;
     }
 
     document.getElementById("locationInput").disabled = true;
     document.getElementById("locationInput").value = "";
     document.getElementById("setLocationBtn").disabled = true;
-    document.getElementById("setLocationBtn").innerText = "✅ Location Set — Waiting for guess...";
+    document.getElementById("setLocationBtn").innerText = "Location Set — Waiting for guess...";
 }
 
 async function submitGuess() {
@@ -257,11 +266,10 @@ async function submitGuess() {
 
     if (data.status === "completed") {
         document.getElementById("guessMessage").innerText =
-            "🎉 Correct! Final Score: " + data.score;
+            "Correct! Final Score: " + data.score;
         document.getElementById("guessInput").disabled = true;
         document.getElementById("submitGuessBtn").disabled = true;
     } else {
-        latestHint = data.message;
         document.getElementById("guessMessage").innerText = data.message;
         if (data.score !== undefined) {
             document.getElementById("scoreDisplay").innerText =

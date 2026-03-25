@@ -14,7 +14,9 @@ exports.createGame = (req,res) => {
         createdAt : new Date(),
         location : null,
         players:{},
-        guesses: []
+        guesses: [],
+        revealedHints: []
+
     };
 
     res.json({
@@ -36,8 +38,8 @@ exports.getGame = (req,res) => {
     }
     const player = game.players[playerId];
     if(player?.role === "guesser" && game.status === "playing"){
-        const hideGame = {...game,location : null};
-        return res.json(hideGame);
+        const hideGame = {...game,location : null,hints : game.revealedHints};
+        return res.json({game,hints:game.revealedHints});
     }
     return res.json(game);
 }
@@ -183,6 +185,7 @@ exports.submitGuess = (req,res) => {
         game.guesses.push({playerId,guess,timestamp : new Date()});
 
         if(game.wrongAttempts === 1){
+            game.revealedHints.push("Continent : "+game.location.continent);
             return res.json(
                     {  
                         message:"Incorrect Guess !! Try again.\nHint : Continent ->  "+game.location.continent,
@@ -191,6 +194,8 @@ exports.submitGuess = (req,res) => {
                 );
         }
         if(game.wrongAttempts === 2){
+            game.revealedHints.push("Country : "+game.location.country);
+
             return res.json(
                 {
                     message:"Incorrect Guess !! Try again.\nHint : Country ->  "+game.location.country,
@@ -199,14 +204,21 @@ exports.submitGuess = (req,res) => {
             );
         }
         if(game.wrongAttempts === 3){
+            game.revealedHints.push("State : "+game.location.state);
             return res.json(
                 {
                     message:"Incorrect Guess !! Try again.\nHint : State ->  "+game.location.state,score:player.score
                 }
             );
         }
+        if(game.wrongAttempts >= 4){
+            return res.json({
+                message:"Incorrect Guess !! Try again.\nAll Hints:\n" + game.revealedHints.join("\n"),
+                score:player.score,
+                hints: game.revealedHints
 
-        return res.json({message:"Incorrect Guess !! Try again."})
+            })
+        }
+        
     
-      
 }
