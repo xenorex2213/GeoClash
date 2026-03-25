@@ -2,6 +2,7 @@
 let playerId = "";
 let gameId = "";
 let pollingInterval;
+let isHost = false;
 
 const BASE_URL = "/api/game"
 function showPage(pageId) {
@@ -13,9 +14,24 @@ function showPage(pageId) {
     document.getElementById(pageId).style.display = "block";
 
     // Poll in waiting AND game page
+   if (pageId === "waitingPage") {
+    if (isHost) {
+        document.getElementById("waitingMessage").innerText =
+            "Share this Game ID with Player 2.";
+        document.getElementById("displayGameId").innerText = gameId;
+    } else {
+        document.getElementById("waitingMessage").innerText =
+            "Waiting for host to start the game...";
+        document.getElementById("displayGameId").innerText = "";
+    }
+
+    document.getElementById("startGameBtn").style.display =
+        isHost ? "block" : "none";
+}   
    if (!pollingInterval && (pageId === "waitingPage" || pageId === "gamePage")) {
         startPolling();
     }
+    
 }
 function startPolling() {
     pollingInterval = setInterval(async () => {
@@ -85,7 +101,6 @@ function startPolling() {
 
     }
 
-
         // Update score display for guesser during polling
         if(data.players && data.players[playerId]) {
             const player = data.players[playerId];
@@ -142,6 +157,8 @@ function login() {
 }
 
 async function createGame() {
+    
+    isHost = true;
     const res = await fetch(`${BASE_URL}/create`, {
         method: "POST"
     });
@@ -157,9 +174,12 @@ async function createGame() {
     await joinGameAutomatically();  
 
     showPage("waitingPage");  
+    isHost = true;
 }
 
 async function joinGame() {
+
+    isHost = false;
     gameId = document.getElementById("joinGameIdInput").value;
 
     const res = await fetch(`${BASE_URL}/join`, {

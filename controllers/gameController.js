@@ -113,8 +113,6 @@ exports.setLocation  = async( req,res) => {
         return res.status(403).json({message : "only setter can set location"})
 
     }
-    //game.location = location;
-    //res.json({message:"location set successfully"})
     try{
 
         const apiKey = process.env.OPENCAGE_KEY;
