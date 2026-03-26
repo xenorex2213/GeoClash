@@ -1,3 +1,4 @@
+const Game = require("./models/Game")
 const games = {};
 const axios = require("axios");
 exports.testController = (req,res) => {
