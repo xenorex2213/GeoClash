@@ -1,24 +1,25 @@
-const Game = require("./models/Game")
-const games = {};
+const Game = require("../models/Game")
+
 const axios = require("axios");
 exports.testController = (req,res) => {
 
     res.json({message : "Game controller is working"});
 }
-exports.createGame = (req,res) => {
+exports.createGame = async (req,res) => {
 
     const gameId = Math.random().toString(10).substring(2,6);
-    games[gameId] = {
+    const game = new Game ({
 
         gameId : gameId,
         status : "lobby",
         createdAt : new Date(),
         location : null,
-        players:{},
-        guesses: [],
-        revealedHints: []
-
-    };
+        players : {},
+        guesses : [],
+        revealedHints : [],
+        wrongAttempts : 0
+    });
+    await game.save();
 
     res.json({
 
@@ -26,51 +27,56 @@ exports.createGame = (req,res) => {
         gameId : gameId
     });
 };
-exports.getGame = (req,res) => {
+exports.getGame = async (req,res) => {
 
     const gameId = req.params.gameId;
-    const game = games[gameId];
     const playerId = req.query.playerId;
+    const game = await Game.findOne({gameId});
 
     if(!game){
         return res.status(404).json({
             message : "Game not found"
         });
     }
-    const player = game.players[playerId];
+    let gameData = game.toObject();
+
+    const player = game.players.get(playerId);
     if(player?.role === "guesser" && game.status === "playing"){
-        const hideGame = {...game,location : null,hints : game.revealedHints};
-        return res.json({game,hints:game.revealedHints});
+        gameData.location = null;
     }
-    return res.json(game);
+    return res.json({game : gameData,hints:game.revealedHints});
 }
-exports.joinGame = (req,res) => {
+exports.joinGame = async (req,res) => {
 
     const {gameId,playerId} = req.body;
 
-    const game = games[gameId];
+    const game = await Game.findOne({gameId});
     if (!game) {
         return res.status(404).json({ message: "Game not found" });
     }
     
-    if(game.players[playerId]){
+    if(game.players.get(playerId)){
         return res.json({message:"Player already joined"});
     }
-    game.players[playerId] = {
+    game.players.set(playerId,{
         role : null,
         score : 100
-    };
-    if(Object.keys(game.players).length == 2){
+    });
+    if(game.players.size === 2){
         game.status = "role";
     }
+    await game.save();
+    console.log("players : ",game.players.size);
+    console.log("status after joining : ",game.status)
     res.json({message: "Player joined successfully"});
 
 }
-exports.assignRole = (req,res) => {
+exports.assignRole = async (req,res) => {
 
+    console.log("assignRole called");
     const {gameId} = req.body;
-    const game = games[gameId];
-
+    const game = await Game.findOne({gameId});
+    console.log("status : ",game.status);
     if(!game){
         return res.status(404).json({message:"Game not found"});
     }
@@ -78,36 +84,40 @@ exports.assignRole = (req,res) => {
     if(game.status !== "role"){
         return res.status(400).json({message:"Roles already assigned"});
     }
-    const playerIds = Object.keys(game.players)
+    const playerIds = Array.from(game.players.keys());
     if(playerIds.length!==2){
         
         return res.status(400).json({message:"Need 2 Players"})
     };
-
+    let p1 = game.players.get(playerIds[0]);
+    let p2 = game.players.get(playerIds[1]);
     if(Math.random() < 0.5){
-        game.players[playerIds[0]].role = "setter";
-        game.players[playerIds[1]].role = "guesser";
+        p1.role = "setter";
+        p2.role = "guesser";
     }
     else{
-        game.players[playerIds[1]].role = "setter";
-        game.players[playerIds[0]].role = "guesser";
+        p2.role = "setter";
+        p1.role = "guesser";
     }
+    game.players.set(playerIds[0],p1);
+    game.players.set(playerIds[1],p2);
 
-    game.status = "playing"
+    game.status = "playing";
+    console.log("status : ",game.status);
+
+    await game.save();
     
-    res.json({message:"Role set successfully",players : game.players});
+    res.json({message:"Role set successfully",players : Object.fromEntries(game.players)});
 };
-exports.setLocation  = async( req,res) => {
+exports.setLocation  = async (req,res) => {
 
     const {gameId,playerId,location} = req.body;
-
-
-    const game = games[gameId];
+    const game = await Game.findOne({gameId});
     if (!game) {
         return res.status(404).json({ message: "Game not found" });
     }
 
-    const player = game.players[playerId];
+    const player = game.players.get(playerId);
 
     if(!player || player.role !== "setter"){
 
@@ -143,6 +153,8 @@ exports.setLocation  = async( req,res) => {
             lng : result.geometry.lng
         };
         game.wrongAttempts = 0;
+        await game.save();
+
 
         return res.json({message:"location set successfully",location:game.location});
 
@@ -152,19 +164,19 @@ exports.setLocation  = async( req,res) => {
     }
     
 }
-exports.submitGuess = (req,res) => {
+exports.submitGuess = async (req,res) => {
 
         const {gameId,playerId,guess} = req.body;
 
         if(!gameId||!playerId||!guess){
             return res.status(400).json({message : "game id ,player id and guess are required"})
         };
-        const game = games[gameId];
+        const game = await Game.findOne({gameId});
 
         if(!game){
             return res.status(404).json({message:"game not found"});
         }
-        const player = game.players[playerId];
+        const player = game.players.get(playerId);
 
         if (!player || player.role !== "guesser") {
         return res.status(403).json({
@@ -176,15 +188,15 @@ exports.submitGuess = (req,res) => {
         }
         if(guess.toLowerCase() === game.location.city.toLowerCase()){
             game.status = "completed";
+            await game.save();
             return res.json({status : game.status,score : player.score})
-
         }
         game.wrongAttempts++;
         player.score -= 10;
         game.guesses.push({playerId,guess,timestamp : new Date()});
-
         if(game.wrongAttempts === 1){
             game.revealedHints.push("Continent : "+game.location.continent);
+            await game.save();
             return res.json(
                     {  
                         message:"Incorrect Guess !! Try again.\nHint : Continent ->  "+game.location.continent,
@@ -194,7 +206,7 @@ exports.submitGuess = (req,res) => {
         }
         if(game.wrongAttempts === 2){
             game.revealedHints.push("Country : "+game.location.country);
-
+            await game.save();
             return res.json(
                 {
                     message:"Incorrect Guess !! Try again.\nHint : Country ->  "+game.location.country,
@@ -204,6 +216,7 @@ exports.submitGuess = (req,res) => {
         }
         if(game.wrongAttempts === 3){
             game.revealedHints.push("State : "+game.location.state);
+            await game.save();
             return res.json(
                 {
                     message:"Incorrect Guess !! Try again.\nHint : State ->  "+game.location.state,score:player.score
@@ -211,6 +224,8 @@ exports.submitGuess = (req,res) => {
             );
         }
         if(game.wrongAttempts >= 4){
+            await game.save();
+
             return res.json({
                 message:"Incorrect Guess !! Try again.\nAll Hints:\n" + game.revealedHints.join("\n"),
                 score:player.score,
