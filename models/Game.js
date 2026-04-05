@@ -1,35 +1,115 @@
 const mongoose = require("mongoose");
-const gameSchema = new mongoose.Schema({
-    gameId : String,
-    status : String,
-    createdAt : Date,
-    
-    location : {
-        continent : String,
-        country : String,
-        state : String,
-        city : String,
-        lat : Number,
-        lng : Number
 
+const gameSchema = new mongoose.Schema({
+    gameId: {
+        type: String,
+        required: true
     },
-    players:{
+
+    status: {
+        type: String,
+        enum: ["lobby", "role", "playing", "completed"],
+        default: "lobby"
+    },
+
+    createdAt: {
+        type: Date,
+        default: Date.now
+    },
+
+    // 🟢 ROUND CONTROL
+    totalRounds: {
+        type: Number,
+        default: 3
+    },
+
+    currentRound: {
+        type: Number,
+        default: 1
+    },
+
+    // 🌍 CURRENT LOCATION (hidden from guesser)
+    location: {
+        continent: String,
+        country: String,
+        state: String,
+        city: String,
+        lat: Number,
+        lng: Number
+    },
+
+    // 👥 PLAYERS
+    players: {
         type: Map,
         of: {
-            role:String,
-            score:Number
-        }
+            role: String,
+            roundScore: {
+                type: Number,
+                default: 100
+            },
+            totalScore: {
+                type: Number,
+                default: 0
+            }
+        },
+        default: {}
     },
 
-    guesses : [
-        {
-            playerId : String,
-            guess:String,
-            timeStamp : Date
+    // 🔴 CURRENT ROUND DATA (LIVE)
+    guesses: {
+        type: [
+            {
+                playerId: String,
+                guess: String,
+                timeStamp: Date
+            }
+        ],
+        default: []
+    },
 
-        }
-    ],
-    revealedHints : [String],
-    wrongAtemmpts : Number
+    revealedHints: {
+        type: [String],
+        default: []
+    },
+
+    wrongAttempts: {
+        type: Number,
+        default: 0
+    },
+
+    // 🔵 ROUND HISTORY
+    rounds: {
+        type: [
+            {
+                roundNumber: Number,
+
+                guesses: [
+                    {
+                        playerId: String,
+                        guess: String,
+                        timeStamp: Date
+                    }
+                ],
+
+                revealedHints: [String],
+                wrongAttempts: Number,
+
+                winner: String,
+
+                scores: {
+                    type: Map,
+                    of: Number
+                },
+
+                // optional but useful 👇
+                location: {
+                    city: String,
+                    country: String
+                }
+            }
+        ],
+        default: []
+    }
 });
-module.exports = mongoose.model('Game',gameSchema);
+
+module.exports = mongoose.model("Game", gameSchema);
