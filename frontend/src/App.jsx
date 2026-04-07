@@ -3,6 +3,8 @@ import Login from "./components/Login";
 import MainMenu from "./components/MainMenu";
 import Setter from "./components/Setter";
 import Guesser from "./components/Guesser";
+import Waiting from "./components/Waiting";
+import Game from "./components/Game";
 
 function App() {
   const [playerId, setPlayerId] = useState("");
@@ -64,7 +66,21 @@ function App() {
 
   // ---------------- LOADING ----------------
   if (!game) {
-    return <div>Loading Game...</div>;
+    return (
+      <div className="app">
+        <div className="shell">
+          <div className="card">
+            <div className="cardHeader">
+              <h2 className="h2">Loading…</h2>
+              <span className="badge badgeAccent">Sync</span>
+            </div>
+            <div className="cardInner">
+              <div className="toast">Fetching game state for {gameId}.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   const player = game.players?.[playerId];
@@ -82,17 +98,56 @@ function App() {
     });
 
     return (
-      <div>
-        <h1>🏆 Game Over</h1>
+      <div className="app">
+        <div className="shell">
+          <div className="topbar">
+            <div className="brand">
+              <div className="logo" aria-hidden="true" />
+              <div className="brandTitle">
+                <strong>GeoGuess</strong>
+                <span>Results</span>
+              </div>
+            </div>
+            <span className="chip">
+              <span className="muted">Game</span>
+              <strong style={{ letterSpacing: ".18em" }}>{gameId}</strong>
+            </span>
+          </div>
 
-        <h3>Final Scores:</h3>
-        {Object.entries(game.players).map(([id, p]) => (
-          <p key={id}>
-            {id}: {p.totalScore}
-          </p>
-        ))}
+          <div className="card">
+            <div className="cardHeader">
+              <h1 className="h1">Game Over</h1>
+              <span className="badge badgeSuccess">Completed</span>
+            </div>
+            <div className="cardInner stack">
+              <div className="toast toastAccent">
+                Winner: <strong>{winner}</strong>
+              </div>
 
-        <h2>Winner: {winner}</h2>
+              <div className="panel">
+                <div className="panelHeader">
+                  <h4>Final Scores</h4>
+                </div>
+                <div className="scroll">
+                  <ul className="list">
+                    {Object.entries(game.players).map(([id, p]) => (
+                      <li className="listItem" key={id}>
+                        <div className="rowWrap">
+                          <strong>{id}</strong>
+                          <span className="muted">•</span>
+                          <span className="muted">Total</span>
+                          <strong>{p.totalScore}</strong>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+
+              <div className="small center">Refresh the page to start over.</div>
+            </div>
+          </div>
+        </div>
       </div>
     );
   }
@@ -100,36 +155,33 @@ function App() {
   // ---------------- ROUND RESULT ----------------
   if (showRoundResult) {
     return (
-      <div>
-        <h2>🎉 Round Complete!</h2>
-        <p>Moving to Round {game.currentRound}</p>
+      <div className="app">
+        <div className="shell">
+          <div className="card">
+            <div className="cardHeader">
+              <h2 className="h2">Round Complete</h2>
+              <span className="badge badgeSuccess">Next</span>
+            </div>
+            <div className="cardInner stack">
+              <div className="toast toastAccent">
+                Moving to Round <strong>{game.currentRound}</strong> / {game.totalRounds}
+              </div>
+              <div className="small center">Roles will be re-assigned automatically.</div>
+            </div>
+          </div>
+        </div>
       </div>
     );
   }
 
+  // ---------------- WAITING / ROLE ----------------
+  if (game.status === "lobby" || game.status === "role") {
+    return <Waiting gameId={gameId} playerId={playerId} game={game} />;
+  }
+
   // ---------------- MAIN GAME ----------------
   return (
-    <div>
-      <h2>Game Started</h2>
-
-      <p>Game ID: {gameId}</p>
-      <p>Status: {game.status}</p>
-
-      {/* 🟢 ROUND INFO */}
-      <h3>
-        Round {game.currentRound} / {game.totalRounds}
-      </h3>
-
-      {/* 🟢 PLAYER INFO */}
-      {player && (
-        <>
-          <p>Your Role: {player.role}</p>
-          <p>Round Score: {player.roundScore}</p>
-          <p>Total Score: {player.totalScore}</p>
-        </>
-      )}
-
-      {/* 🟢 GAME SCREENS */}
+    <Game gameId={gameId} playerId={playerId} game={game}>
       {player?.role === "setter" && (
         <Setter
           gameId={gameId}
@@ -147,7 +199,7 @@ function App() {
           game={game}
         />
       )}
-    </div>
+    </Game>
   );
 }
 

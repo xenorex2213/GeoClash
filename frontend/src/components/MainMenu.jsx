@@ -45,49 +45,87 @@ function MainMenu({ playerId, setGameId }) {
   };
 
   return (
-    <div>
-      <h2>Welcome {playerId}</h2>
+    <div className="app">
+      <div className="shell">
+        <div className="topbar">
+          <div className="brand">
+            <div className="logo" aria-hidden="true" />
+            <div className="brandTitle">
+              <strong>GeoGuess</strong>
+              <span>Lobby</span>
+            </div>
+          </div>
 
-      {/* 🔥 ROUND SELECTOR */}
-      <div>
-        <h3>Select Number of Rounds</h3>
+          <span className="chip">
+            <span className="muted">Player</span>
+            <strong>{playerId}</strong>
+          </span>
+        </div>
 
-        <button
-          onClick={() => setTotalRounds(3)}
-          style={{
-            backgroundColor: totalRounds === 3 ? "#4caf50" : "gray",
-            color: "white",
-            marginRight: "10px"
-          }}
-        >
-          3 Rounds
-        </button>
+        <div className="grid">
+          <div className="card cardInteractive">
+            <div className="cardHeader">
+              <h2 className="h2">Create a Game</h2>
+              <span className="badge badgeSuccess">Host</span>
+            </div>
 
-        <button
-          onClick={() => setTotalRounds(5)}
-          style={{
-            backgroundColor: totalRounds === 5 ? "#4caf50" : "gray",
-            color: "white"
-          }}
-        >
-          5 Rounds
-        </button>
+            <div className="cardInner stack">
+              <div>
+                <div className="label">Rounds</div>
+                <div className="segment" role="group" aria-label="Select rounds">
+                  <button
+                    className={`btn ${totalRounds === 3 ? "btnOn" : ""}`}
+                    onClick={() => setTotalRounds(3)}
+                    type="button"
+                  >
+                    3 Rounds
+                  </button>
+                  <button
+                    className={`btn ${totalRounds === 5 ? "btnOn" : ""}`}
+                    onClick={() => setTotalRounds(5)}
+                    type="button"
+                  >
+                    5 Rounds
+                  </button>
+                </div>
+                <div className="small">Selected: {totalRounds} rounds</div>
+              </div>
 
-        <p>Selected: {totalRounds} rounds</p>
+              <button className="btn btnPrimary" onClick={handleCreate}>
+                Create Game
+              </button>
+            </div>
+          </div>
+
+          <div className="card cardInteractive">
+            <div className="cardHeader">
+              <h2 className="h2">Join a Game</h2>
+              <span className="badge badgeAccent">Invite</span>
+            </div>
+
+            <div className="cardInner stack">
+              <div>
+                <label className="label" htmlFor="joinGameId">
+                  Game ID
+                </label>
+                <input
+                  id="joinGameId"
+                  className="input"
+                  placeholder="4-digit code"
+                  value={joinId}
+                  onChange={(e) => setJoinId(e.target.value)}
+                  autoComplete="off"
+                />
+                <div className="small">Ask the host to share the code.</div>
+              </div>
+
+              <button className="btn" onClick={handleJoin}>
+                Join Game
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
-
-      <br />
-
-      <button onClick={handleCreate}>Create Game</button>
-
-      <br /><br />
-
-      <input
-        placeholder="Enter Game ID"
-        value={joinId}
-        onChange={(e) => setJoinId(e.target.value)}
-      />
-      <button onClick={handleJoin}>Join Game</button>
     </div>
   );
 }

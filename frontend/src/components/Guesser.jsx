@@ -32,47 +32,67 @@ function Guesser({ gameId, playerId, player, game }) {
   };
 
   return (
-    <div>
-      <h3>Make a Guess</h3>
+    <div className="stack">
+      <div className="toast">
+        <div className="rowWrap">
+          <strong>Guesser:</strong>
+          <span className="muted">Find the city.</span>
+          <span className="muted">•</span>
+          <span className="muted">Round score</span>
+          <strong>{player?.roundScore ?? "—"}</strong>
+        </div>
+      </div>
 
-      <input
-        value={guess}
-        onChange={(e) => setGuess(e.target.value)}
-        placeholder="Enter city"
-      />
-      <button onClick={handleGuess}>Guess</button>
-
-      {/* 🔥 MESSAGE */}
-      {message && <p>{message}</p>}
-
-      {/* 🔥 SCORE */}
-      <p>Score: {player.score}</p>
-
-      {/* 🔥 HINTS */}
-      <h4>Hints:</h4>
-      {game.revealedHints?.length === 0 ? (
-        <p>No hints yet</p>
-      ) : (
-        <ul>
-          {game.revealedHints?.map((h, i) => (
-            <li key={i}>{h}</li>
-          ))}
-        </ul>
+      {message && (
+        <div className={`toast ${message.toLowerCase().includes("incorrect") ? "toastDanger" : "toastAccent"}`}>
+          {message}
+        </div>
       )}
 
-      {/* 🔥 GUESSES */}
-      <h4>Previous Guesses:</h4>
-      {game.guesses?.length === 0 ? (
-        <p>No guesses yet</p>
-      ) : (
-        <ul>
-          {game.guesses?.map((g, i) => (
-            <li key={i}>
-              {g.playerId}: {g.guess}
-            </li>
-          ))}
-        </ul>
-      )}
+      <div className="panel">
+        <div className="panelHeader">
+          <h4>Submit Guess</h4>
+          <span className="badge badgeAccent">Action</span>
+        </div>
+        <div className="scroll">
+          <label className="label" htmlFor="guessInput">
+            City
+          </label>
+          <div className="stack">
+            <input
+              id="guessInput"
+              className="input"
+              value={guess}
+              onChange={(e) => setGuess(e.target.value)}
+              placeholder="e.g. Paris"
+              autoComplete="off"
+            />
+            <button className="btn btnPrimary" onClick={handleGuess}>
+              Guess
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div className="panel">
+        <div className="panelHeader">
+          <h4>Hints</h4>
+          <span className="small">Revealed on wrong attempts</span>
+        </div>
+        <div className="scroll">
+          {game?.revealedHints?.length ? (
+            <ul className="list">
+              {game.revealedHints.map((h, i) => (
+                <li className="listItem" key={i}>
+                  {h}
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <div className="small">No hints yet.</div>
+          )}
+        </div>
+      </div>
     </div>
   );
 }
