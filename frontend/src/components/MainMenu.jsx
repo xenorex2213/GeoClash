@@ -3,6 +3,7 @@ import { useState } from "react";
 function MainMenu({ playerId, setGameId }) {
   const [joinId, setJoinId] = useState("");
   const [totalRounds, setTotalRounds] = useState(3);
+  const [mode,setMode] = useState("text");
 
   // 🎮 Create game
   const handleCreate = async () => {
@@ -11,7 +12,7 @@ function MainMenu({ playerId, setGameId }) {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ totalRounds }) // ✅ FIX
+      body: JSON.stringify({ totalRounds,mode }) // ✅ FIX
     });
 
     const data = await res.json();
@@ -27,6 +28,7 @@ function MainMenu({ playerId, setGameId }) {
     });
 
     setGameId(newGameId);
+
   };
 
   // 🔗 Join game
@@ -90,7 +92,20 @@ function MainMenu({ playerId, setGameId }) {
                 </div>
                 <div className="small">Selected: {totalRounds} rounds</div>
               </div>
+              <h3>Select Mode</h3>
+                <button
+                  onClick={() => setMode("text")}
+                  style={{ backgroundColor: mode === "text" ? "green" : "gray" }}
+                >
+                  Text Mode
+                </button>
 
+                <button
+                  onClick={() => setMode("map")}
+                  style={{ backgroundColor: mode === "map" ? "green" : "gray" }}
+                >
+                  Map Mode
+                </button>
               <button className="btn btnPrimary" onClick={handleCreate}>
                 Create Game
               </button>

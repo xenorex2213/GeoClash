@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Kinetic Explorer | Mission Brief</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-background": "#ffffff",
+                    "error-container": "#9f0519",
+                    "inverse-primary": "#006e37",
+                    "on-tertiary-container": "#004955",
+                    "on-primary-fixed": "#004621",
+                    "inverse-on-surface": "#545555",
+                    "surface-container-high": "#1d2020",
+                    "on-primary-fixed-variant": "#006632",
+                    "tertiary-dim": "#00cdec",
+                    "surface": "#0d0f0f",
+                    "surface-tint": "#a4ffb9",
+                    "secondary-dim": "#d0d6d5",
+                    "on-primary-container": "#005b2c",
+                    "surface-container-highest": "#232626",
+                    "outline-variant": "#474848",
+                    "on-tertiary-fixed": "#00343d",
+                    "surface-container-low": "#121414",
+                    "outline": "#747675",
+                    "on-surface-variant": "#aaabab",
+                    "on-surface": "#ffffff",
+                    "tertiary-fixed": "#00dcfd",
+                    "primary": "#a4ffb9",
+                    "on-secondary-container": "#ccd1d1",
+                    "inverse-surface": "#f9f9f9",
+                    "primary-fixed-dim": "#00ed7e",
+                    "error": "#ff716c",
+                    "tertiary": "#7ae6ff",
+                    "secondary-container": "#424848",
+                    "error-dim": "#d7383b",
+                    "on-tertiary-fixed-variant": "#005361",
+                    "on-error-container": "#ffa8a3",
+                    "on-secondary-fixed": "#3a4040",
+                    "tertiary-container": "#00dcfd",
+                    "on-secondary-fixed-variant": "#565d5c",
+                    "secondary-fixed": "#dee4e3",
+                    "secondary-fixed-dim": "#d0d6d5",
+                    "primary-dim": "#00ed7e",
+                    "primary-fixed": "#00fd87",
+                    "on-secondary": "#4d5353",
+                    "on-error": "#490006",
+                    "surface-variant": "#232626",
+                    "surface-container": "#181a1a",
+                    "surface-dim": "#0d0f0f",
+                    "tertiary-fixed-dim": "#00cdec",
+                    "primary-container": "#00fd87",
+                    "surface-bright": "#2a2d2d",
+                    "background": "#0d0f0f",
+                    "on-tertiary": "#005360",
+                    "on-primary": "#006532",
+                    "surface-container-lowest": "#000000",
+                    "secondary": "#dee4e3"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "fontFamily": {
+                    "headline": ["Space Grotesk"],
+                    "body": ["Inter"],
+                    "label": ["Inter"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            background-color: #0d0f0f;
+            color: #ffffff;
+            font-family: 'Inter', sans-serif;
+            overflow: hidden;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .glass-panel {
+            background: rgba(35, 38, 38, 0.4);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(170, 171, 171, 0.2);
+            border-left: 1px solid rgba(170, 171, 171, 0.2);
+        }
+        .neon-glow {
+            box-shadow: 0 0 15px rgba(164, 255, 185, 0.2);
+        }
+        .kinetic-gradient {
+            background: linear-gradient(135deg, #a4ffb9 0%, #00fd87 100%);
+        }
+    </style>
+</head>
+<body class="flex h-screen w-full">
+<!-- SideNavBar Shell -->
+<aside class="fixed left-0 h-full w-64 z-40 bg-[#121414]/80 backdrop-blur-2xl border-r border-white/5 flex flex-col py-8">
+<div class="px-6 mb-10">
+<h1 class="font-['Space_Grotesk'] text-xl text-[#a4ffb9]">Kinetic Explorer</h1>
+</div>
+<div class="flex-1 space-y-2">
+<!-- World Hub (Active) -->
+<a class="flex items-center gap-4 bg-gradient-to-r from-[#a4ffb9]/20 to-transparent text-[#a4ffb9] border-l-4 border-[#a4ffb9] py-3 px-6 duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="public">public</span>
+<span class="font-['Inter'] uppercase tracking-[0.1em] text-xs">World Hub</span>
+</a>
+<a class="flex items-center gap-4 text-slate-500 hover:text-slate-200 py-3 px-6 transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="leaderboard">leaderboard</span>
+<span class="font-['Inter'] uppercase tracking-[0.1em] text-xs">Leaderboards</span>
+</a>
+<a class="flex items-center gap-4 text-slate-500 hover:text-slate-200 py-3 px-6 transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-['Inter'] uppercase tracking-[0.1em] text-xs">Settings</span>
+</a>
+</div>
+<div class="px-6 mt-auto">
+<div class="glass-panel p-4 rounded-lg mb-8">
+<div class="flex items-center gap-3 mb-3">
+<img alt="User Avatar" class="w-10 h-10 rounded-full border border-primary/30" data-alt="Close-up portrait of a stylized digital avatar character with neon green accents and futuristic apparel" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBBYWfZZKKlLZydUzbLXoxhp8hsxGhAqg5tKwsrWURIzikx7PfT8Y58wMAsepjXZQFiL3pvRjDiKm9OVlvwIaHbxnziP9opSkvmjziry5W9TJFxusS52-XP7lb_uaHCwjtAQlM_9GMR8MXDHEunaBrc8RIhDu1Pmxp8FxSdCs82vQE_2EgVDQIamE67YCmAAjnWawkzzwy1VmxRJ4PNgE9UYcaVuQ7E_P-m5Sqxkab8XTd05mgmtHAm64q9_8GlduyIuIAcHZdn6kE"/>
+<div>
+<p class="text-xs font-bold text-white">Explorer-01</p>
+<p class="text-[10px] text-primary">Rank: Silver IV</p>
+</div>
+</div>
+<button class="w-full kinetic-gradient text-on-primary py-2 px-4 rounded font-bold text-xs uppercase tracking-wider hover:scale-105 transition-transform">
+                    Play Solo
+                </button>
+</div>
+<a class="flex items-center gap-4 text-slate-500 hover:text-slate-200 transition-colors py-2" href="#">
+<span class="material-symbols-outlined" data-icon="logout">logout</span>
+<span class="font-['Inter'] uppercase tracking-[0.1em] text-xs">Logout</span>
+</a>
+</div>
+</aside>
+<!-- Main Game Canvas -->
+<main class="ml-64 flex-1 relative flex flex-col h-screen overflow-hidden">
+<!-- TopNavBar Shell -->
+<header class="fixed top-0 right-0 left-64 z-50 bg-slate-950/60 backdrop-blur-xl border-b border-white/10 flex justify-between items-center px-6 py-4">
+<div class="flex items-center gap-4">
+<span class="text-slate-400 text-xs font-label uppercase tracking-widest">Active Mission: Coordinates Unknown</span>
+</div>
+<div class="flex items-center gap-6">
+<button class="text-slate-400 hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-2xl" data-icon="account_circle">account_circle</span>
+</button>
+<button class="text-slate-400 hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-2xl" data-icon="settings">settings</span>
+</button>
+</div>
+</header>
+<!-- Environment Visualizer -->
+<div class="absolute inset-0 z-0">
+<div class="w-full h-full bg-cover bg-center" data-alt="Stunning cinematic wide shot of mist-covered jagged mountain peaks in Northern Europe under a moody overcast sky" data-location="Norway Mountains" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBtkKj7fMesrPTLxrVTqs_hl0QyZAPX5aMI5qbg_2ZAkkHxGYBAKxoTW9r6AIbuYJ4xRRv1s_bDBFXSxD4pCaVwrMiaSL-oE2uLXlXUl6GqjpMvWWguDXrrFxKN3ubaE5FYZe5_rs80nYTUrwvzQLMfBGbrP8MdJd_MAKFtWs3hJBgXO-e_hqL2BCMFkGjegyVgaI0ODboksXh0SK7D1Q6cV2C-GePreKPgtTWaHW39q0_FRRn5txGIj-vEUvtkcS7YWhGz8h_-WRk')">
+</div>
+<div class="absolute inset-0 bg-gradient-to-t from-background via-transparent to-black/40"></div>
+<!-- Interactive Radar/Overlay Elements -->
+<div class="absolute top-24 left-8 pointer-events-none">
+<div class="glass-panel p-4 rounded-lg flex items-center gap-4 border-l-4 border-primary">
+<div class="w-12 h-12 flex items-center justify-center bg-primary/10 rounded-full border border-primary/20">
+<span class="material-symbols-outlined text-primary" data-icon="explore">explore</span>
+</div>
+<div>
+<p class="text-[10px] text-primary uppercase tracking-[0.2em] font-bold">Signal Strength</p>
+<p class="font-headline text-2xl font-bold tracking-tighter">98.4%</p>
+</div>
+</div>
+</div>
+</div>
+<!-- UI Layout Layers -->
+<div class="relative z-10 flex-1 flex flex-col justify-end p-8 pb-12">
+<div class="grid grid-cols-12 gap-8 items-end">
+<!-- Intelligence Hub (Hints/Data) -->
+<div class="col-span-3">
+<div class="glass-panel p-6 rounded-xl border-l-4 border-tertiary">
+<div class="flex items-center gap-2 mb-4">
+<span class="material-symbols-outlined text-tertiary" data-icon="psychology">psychology</span>
+<h3 class="font-headline text-sm font-bold uppercase tracking-widest text-tertiary">Intelligence Hub</h3>
+</div>
+<div class="space-y-4">
+<div class="p-3 bg-surface-container-highest rounded-lg">
+<p class="text-[10px] text-on-surface-variant uppercase mb-1">Environmental Scan</p>
+<p class="text-xs text-white">Sub-arctic vegetation detected. Granite rock formations consistent with Scandinavian shield.</p>
+</div>
+<div class="p-3 bg-surface-container-highest rounded-lg opacity-60">
+<p class="text-[10px] text-on-surface-variant uppercase mb-1">License Plate Analysis</p>
+<p class="text-xs italic text-slate-400">Locked. Solve round in under 30s to unlock.</p>
+</div>
+<button class="w-full border border-tertiary/30 text-tertiary py-2 text-[10px] uppercase font-bold tracking-widest hover:bg-tertiary/10 transition-colors">
+                                Request Local Insight
+                            </button>
+</div>
+</div>
+</div>
+<!-- Guesser Input Area -->
+<div class="col-span-6 flex flex-col items-center">
+<div class="mb-6 flex gap-4">
+<div class="bg-surface-container-low/80 backdrop-blur-md px-6 py-2 rounded-full border border-white/5 flex items-center gap-3">
+<span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+<span class="font-headline text-xl font-bold">04:22</span>
+</div>
+<div class="bg-surface-container-low/80 backdrop-blur-md px-6 py-2 rounded-full border border-white/5 flex items-center gap-3">
+<span class="material-symbols-outlined text-tertiary" data-icon="stars">stars</span>
+<span class="font-headline text-xl font-bold">4,820 pts</span>
+</div>
+</div>
+<div class="w-full glass-panel p-2 rounded-2xl flex items-center shadow-2xl">
+<div class="flex-1 px-4">
+<label class="block text-[10px] uppercase tracking-widest text-primary font-bold mb-1 ml-1">Input Deployment Coordinates</label>
+<input class="w-full bg-transparent border-none text-on-surface focus:ring-0 text-lg font-headline placeholder:text-slate-600" placeholder="Enter Country or City Name..." type="text"/>
+</div>
+<button class="h-16 px-10 kinetic-gradient rounded-xl flex items-center justify-center gap-3 hover:scale-[1.02] active:scale-95 transition-all">
+<span class="font-headline font-bold text-on-primary tracking-tight text-xl">LOCK GUESS</span>
+<span class="material-symbols-outlined text-on-primary" data-icon="target">target</span>
+</button>
+</div>
+<div class="mt-4 flex gap-8">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-sm" data-icon="done_all" style="font-variation-settings: 'FILL' 1;">done_all</span>
+<span class="text-[10px] uppercase tracking-widest text-slate-400">Round 3 of 5</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-error text-sm" data-icon="warning" style="font-variation-settings: 'FILL' 1;">warning</span>
+<span class="text-[10px] uppercase tracking-widest text-slate-400">50/50 Lifeline Ready</span>
+</div>
+</div>
+</div>
+<!-- Live Feedback/Chat/Activity -->
+<div class="col-span-3">
+<div class="glass-panel p-6 rounded-xl h-[320px] flex flex-col">
+<div class="flex items-center justify-between mb-4 border-b border-white/5 pb-3">
+<h3 class="font-headline text-sm font-bold uppercase tracking-widest">Live Feed</h3>
+<span class="px-2 py-0.5 bg-primary/20 text-primary text-[9px] font-bold rounded">ONLINE</span>
+</div>
+<div class="flex-1 overflow-y-auto space-y-4 pr-2 custom-scrollbar">
+<div class="flex gap-3">
+<div class="w-1 bg-primary h-8 self-center rounded-full"></div>
+<div>
+<p class="text-[10px] font-bold text-primary-fixed-dim">SYSTEM_LOG</p>
+<p class="text-[11px] text-slate-300">Target identified in Northern Hemisphere.</p>
+</div>
+</div>
+<div class="flex gap-3">
+<div class="w-1 bg-tertiary h-8 self-center rounded-full"></div>
+<div>
+<p class="text-[10px] font-bold text-tertiary">PRO_SCOUT_99</p>
+<p class="text-[11px] text-slate-300">Looks like the E6 highway near Narvik.</p>
+</div>
+</div>
+<div class="flex gap-3 opacity-50">
+<div class="w-1 bg-slate-500 h-8 self-center rounded-full"></div>
+<div>
+<p class="text-[10px] font-bold text-slate-400">BEGINNER_X</p>
+<p class="text-[11px] text-slate-300">Maybe Iceland?</p>
+</div>
+</div>
+</div>
+<div class="mt-4 pt-3 border-t border-white/5">
+<div class="flex items-center gap-2 bg-surface-container-highest px-3 py-2 rounded-lg">
+<input class="bg-transparent border-none text-[11px] flex-1 focus:ring-0 p-0 placeholder:text-slate-600" placeholder="Transmit data..." type="text"/>
+<span class="material-symbols-outlined text-slate-500 text-sm cursor-pointer hover:text-white" data-icon="send">send</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Atmospheric Glow Elements -->
+<div class="absolute bottom-0 left-1/2 -translate-x-1/2 w-[800px] h-[300px] bg-primary/5 blur-[120px] rounded-full pointer-events-none"></div>
+<div class="absolute top-0 right-0 w-[400px] h-[400px] bg-tertiary/5 blur-[100px] rounded-full pointer-events-none"></div>
+</main>
+<style>
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 3px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #a4ffb9;
+            border-radius: 10px;
+        }
+    </style>
+</body></html>

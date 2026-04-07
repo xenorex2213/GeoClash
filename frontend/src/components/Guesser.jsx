@@ -1,98 +1,100 @@
 import { useState } from "react";
+import { MapContainer, TileLayer, useMapEvents } from "react-leaflet";
 
-function Guesser({ gameId, playerId, player, game }) {
-  const [guess, setGuess] = useState("");
-  const [message, setMessage] = useState("");
 
-  const handleGuess = async () => {
-    if (!guess) return;
-
-    try {
-      const res = await fetch("/api/game/guess", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ gameId, playerId, guess }),
-      });
-
-      const data = await res.json();
-
-      // 🔥 Show feedback instantly
-      if (data.message) {
-        setMessage(data.message);
-      } else if (data.status === "completed") {
-        setMessage("Correct Guess! 🎉");
-      }
-
-      setGuess("");
-    } catch (err) {
-      console.error("Guess error:", err);
+function ClickHandler({ onClick }) {
+  useMapEvents({
+    click(e) {
+      onClick(e.latlng);
     }
+  });
+  return null;
+}
+
+function Guesser({ gameId, playerId, game }) {
+  console.log("FULL GAME : ",game);
+  console.log("Mode : ",game.mode);
+  const [guess, setGuess] = useState("");
+  const [coords, setCoords] = useState(null);
+
+  const handleTextGuess = async () => {
+    if (!guess.trim()) return;
+
+    await fetch("/api/game/guess", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ gameId, playerId, guess })
+    });
+
+    setGuess("");
+  };
+
+  const handleMapGuess = async () => {
+    if (!coords) return alert("Click on map");
+
+    await fetch("/api/game/guess", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        gameId,
+        playerId,
+        lat: coords.lat,
+        lng: coords.lng
+      })
+    });
   };
 
   return (
-    <div className="stack">
-      <div className="toast">
-        <div className="rowWrap">
-          <strong>Guesser:</strong>
-          <span className="muted">Find the city.</span>
-          <span className="muted">•</span>
-          <span className="muted">Round score</span>
-          <strong>{player?.roundScore ?? "—"}</strong>
-        </div>
-      </div>
+    <div>
+      <h3>Guesser</h3>
 
-      {message && (
-        <div className={`toast ${message.toLowerCase().includes("incorrect") ? "toastDanger" : "toastAccent"}`}>
-          {message}
-        </div>
+      {/* TEXT MODE */}
+      {game?.mode === "text" && (
+        <>
+          {!game?.mode && <p>Loading mode...</p>}
+          <input
+            value={guess}
+            onChange={(e) => setGuess(e.target.value)}
+            placeholder="Enter city"
+          />
+          <button onClick={handleTextGuess}>Submit</button>
+        </>
       )}
 
-      <div className="panel">
-        <div className="panelHeader">
-          <h4>Submit Guess</h4>
-          <span className="badge badgeAccent">Action</span>
-        </div>
-        <div className="scroll">
-          <label className="label" htmlFor="guessInput">
-            City
-          </label>
-          <div className="stack">
-            <input
-              id="guessInput"
-              className="input"
-              value={guess}
-              onChange={(e) => setGuess(e.target.value)}
-              placeholder="e.g. Paris"
-              autoComplete="off"
-            />
-            <button className="btn btnPrimary" onClick={handleGuess}>
-              Guess
-            </button>
-          </div>
-        </div>
-      </div>
+      {/* MAP MODE */}
+      {game?.mode === "map" && (
+        <>
+          {!game?.mode && <p>Loading mode...</p>}
+          <MapContainer
+            center={[20, 0]}
+            zoom={2}
+            style={{ height: "400px" }}
+          >
+            <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+            <ClickHandler onClick={setCoords} />
+          </MapContainer>
 
-      <div className="panel">
-        <div className="panelHeader">
-          <h4>Hints</h4>
-          <span className="small">Revealed on wrong attempts</span>
-        </div>
-        <div className="scroll">
-          {game?.revealedHints?.length ? (
-            <ul className="list">
-              {game.revealedHints.map((h, i) => (
-                <li className="listItem" key={i}>
-                  {h}
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <div className="small">No hints yet.</div>
+          {coords && (
+            <p>
+              Selected: {coords.lat.toFixed(2)}, {coords.lng.toFixed(2)}
+            </p>
           )}
-        </div>
-      </div>
+
+          <button onClick={handleMapGuess}>Submit Location</button>
+        </>
+      )}
+
+      {/* Hints */}
+      <h3>Hints</h3>
+      <ul>
+        {game?.revealedHints?.map((h, i) => (
+          <li key={i}>{h}</li>
+        ))}
+      </ul>
     </div>
   );
 }

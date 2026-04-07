@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>The Kinetic Explorer - Tactical Intel</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-container": "#181a1a",
+                    "surface-tint": "#a4ffb9",
+                    "on-tertiary": "#005360",
+                    "secondary": "#dee4e3",
+                    "secondary-dim": "#d0d6d5",
+                    "on-background": "#ffffff",
+                    "surface-bright": "#2a2d2d",
+                    "tertiary-fixed": "#00dcfd",
+                    "error-container": "#9f0519",
+                    "error": "#ff716c",
+                    "on-secondary": "#4d5353",
+                    "surface-dim": "#0d0f0f",
+                    "primary-fixed-dim": "#00ed7e",
+                    "primary-container": "#00fd87",
+                    "on-tertiary-fixed-variant": "#005361",
+                    "inverse-on-surface": "#545555",
+                    "tertiary-container": "#00dcfd",
+                    "outline-variant": "#474848",
+                    "on-primary": "#006532",
+                    "on-secondary-fixed": "#3a4040",
+                    "surface-container-low": "#121414",
+                    "tertiary-dim": "#00cdec",
+                    "inverse-primary": "#006e37",
+                    "on-primary-fixed-variant": "#006632",
+                    "secondary-fixed-dim": "#d0d6d5",
+                    "on-primary-container": "#005b2c",
+                    "primary-fixed": "#00fd87",
+                    "error-dim": "#d7383b",
+                    "on-secondary-container": "#ccd1d1",
+                    "surface-container-lowest": "#000000",
+                    "secondary-container": "#424848",
+                    "on-error-container": "#ffa8a3",
+                    "on-secondary-fixed-variant": "#565d5c",
+                    "inverse-surface": "#f9f9f9",
+                    "secondary-fixed": "#dee4e3",
+                    "primary": "#a4ffb9",
+                    "surface-container-highest": "#232626",
+                    "outline": "#747675",
+                    "on-primary-fixed": "#004621",
+                    "on-surface-variant": "#aaabab",
+                    "tertiary-fixed-dim": "#00cdec",
+                    "tertiary": "#7ae6ff",
+                    "on-surface": "#ffffff",
+                    "on-tertiary-fixed": "#00343d",
+                    "on-error": "#490006",
+                    "surface": "#0d0f0f",
+                    "surface-variant": "#232626",
+                    "surface-container-high": "#1d2020",
+                    "on-tertiary-container": "#004955",
+                    "primary-dim": "#00ed7e",
+                    "background": "#0d0f0f"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "fontFamily": {
+                    "headline": ["Space Grotesk"],
+                    "body": ["Inter"],
+                    "label": ["Inter"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-panel {
+            background: rgba(35, 38, 38, 0.4);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(170, 171, 171, 0.2);
+            border-left: 1px solid rgba(170, 171, 171, 0.2);
+        }
+        .neon-glow {
+            box-shadow: 0 0 15px rgba(164, 255, 185, 0.3);
+        }
+    </style>
+</head>
+<body class="bg-surface font-body text-on-surface selection:bg-primary-container selection:text-on-primary-container overflow-hidden">
+<!-- TopNavBar -->
+<nav class="fixed top-0 w-full z-50 bg-slate-950/60 backdrop-blur-xl border-b border-white/10 flex justify-between items-center px-6 h-16 w-full shadow-[0_0_40px_rgba(164,255,185,0.06)]">
+<div class="flex items-center gap-4">
+<span class="text-2xl font-bold tracking-tighter text-emerald-400 font-['Space_Grotesk']">The Kinetic Explorer</span>
+</div>
+<div class="flex items-center gap-6">
+<div class="hidden md:flex gap-8 items-center text-sm font-['Space_Grotesk'] tracking-tight">
+<a class="text-slate-400 hover:bg-white/5 hover:text-emerald-300 transition-all duration-300 px-3 py-1 rounded-lg" href="#">World Hub</a>
+<a class="text-emerald-400 font-bold hover:bg-white/5 transition-all duration-300 px-3 py-1 rounded-lg" href="#">Tactical Feed</a>
+<a class="text-slate-400 hover:bg-white/5 hover:text-emerald-300 transition-all duration-300 px-3 py-1 rounded-lg" href="#">Leaderboards</a>
+</div>
+<div class="flex items-center gap-3 active:scale-95 transition-transform cursor-pointer">
+<span class="material-symbols-outlined text-slate-400">settings</span>
+<div class="w-8 h-8 rounded-full bg-surface-container-highest border border-white/10 flex items-center justify-center overflow-hidden">
+<img alt="Player Profile" data-alt="minimalist avatar of a futuristic explorer wearing high-tech headgear in emerald and dark grey tones" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBCHzTX64PpO7KGGNyvn5F-_3_6ttJAutrTG1u3UZjTlz1iEWxPuLmZLcIMVIFIks3wPvhniUUUBBc_kSY3sHdPOhdJSkbhO_TsOuFWwrDM-HAdLX6uXZu7fcNvPw0g7ffWwhYwkbyDwdQ82R75kQU_f9DwZ6see4zWEitN6X0Cy1kpTfj5mpJSt8jha5ZfIgQ502K8M5dRImrqGEFAXjV88FdEnnOebIL4A-2kAaPJ9sLuYI_K_Kq1TD4vL8SKDO8SnjnLELwdYzk"/>
+</div>
+</div>
+</div>
+</nav>
+<!-- SideNavBar -->
+<aside class="fixed left-0 top-0 h-full w-64 z-40 bg-slate-900/40 backdrop-blur-2xl border-r border-white/5 flex flex-col pt-20 pb-8 px-4 hidden md:flex">
+<div class="mb-10 px-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 bg-primary-container rounded flex items-center justify-center">
+<span class="material-symbols-outlined text-on-primary-container" style="font-variation-settings: 'FILL' 1;">explore</span>
+</div>
+<div>
+<h2 class="font-['Space_Grotesk'] text-xl uppercase tracking-widest text-emerald-400">GeoGuess</h2>
+<p class="text-[10px] text-slate-500 uppercase tracking-[0.2em]">Precision Luminescence</p>
+</div>
+</div>
+</div>
+<nav class="flex-1 flex flex-col gap-2">
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-500 hover:text-slate-200 hover:bg-white/5 transition-colors duration-200 group" href="#">
+<span class="material-symbols-outlined group-hover:translate-x-1 transition-transform">public</span>
+<span class="font-['Inter'] font-medium text-sm">World Hub</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg bg-emerald-500/10 text-emerald-400 border-r-2 border-emerald-400 transition-colors duration-200 group" href="#">
+<span class="material-symbols-outlined group-hover:translate-x-1 transition-transform">analytics</span>
+<span class="font-['Inter'] font-medium text-sm">Tactical Intel</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-500 hover:text-slate-200 hover:bg-white/5 transition-colors duration-200 group" href="#">
+<span class="material-symbols-outlined group-hover:translate-x-1 transition-transform">leaderboard</span>
+<span class="font-['Inter'] font-medium text-sm">Leaderboards</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-500 hover:text-slate-200 hover:bg-white/5 transition-colors duration-200 group" href="#">
+<span class="material-symbols-outlined group-hover:translate-x-1 transition-transform">settings</span>
+<span class="font-['Inter'] font-medium text-sm">Settings</span>
+</a>
+</nav>
+<div class="mt-auto px-4">
+<button class="w-full bg-primary-container text-on-primary-container py-3 rounded-lg font-headline font-bold text-sm tracking-widest uppercase hover:scale-[1.02] active:scale-[0.98] transition-all">
+                Play Now
+            </button>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="md:pl-64 pt-16 h-screen w-full bg-surface">
+<div class="h-full w-full p-6 lg:p-10 flex flex-col gap-8 relative overflow-y-auto">
+<!-- Atmospheric Glow Backgrounds -->
+<div class="absolute top-1/4 right-1/4 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[120px] pointer-events-none"></div>
+<div class="absolute bottom-1/4 left-1/4 w-[300px] h-[300px] bg-tertiary/5 rounded-full blur-[80px] pointer-events-none"></div>
+<!-- Top Header & Score -->
+<div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 relative z-10">
+<div>
+<p class="text-primary text-xs font-bold tracking-[0.3em] uppercase mb-1">Active Operation</p>
+<h1 class="font-headline text-4xl lg:text-5xl font-bold tracking-tighter text-on-surface">TEXT-BASED <span class="text-primary">GUESSER</span></h1>
+</div>
+<div class="flex items-center gap-8">
+<div class="flex flex-col items-end">
+<span class="text-on-surface-variant text-[10px] uppercase tracking-widest font-bold">Round Credits</span>
+<div class="flex items-center gap-2">
+<span class="font-headline text-5xl font-extrabold text-primary">100</span>
+<span class="material-symbols-outlined text-primary text-3xl" style="font-variation-settings: 'FILL' 1;">generating_tokens</span>
+</div>
+</div>
+<div class="h-12 w-px bg-outline-variant/30"></div>
+<div class="flex flex-col items-end">
+<span class="text-on-surface-variant text-[10px] uppercase tracking-widest font-bold">Accuracy</span>
+<span class="font-headline text-3xl font-bold text-on-surface">94.2<span class="text-primary text-xl">%</span></span>
+</div>
+</div>
+</div>
+<!-- Grid Layout -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-6 relative z-10 flex-1 min-h-0">
+<!-- Tactical Intel Panel (Large) -->
+<div class="lg:col-span-8 flex flex-col gap-6">
+<div class="glass-panel rounded-xl p-8 flex-1 flex flex-col relative overflow-hidden">
+<div class="absolute top-0 right-0 p-4">
+<div class="flex gap-2">
+<div class="w-2 h-2 rounded-full bg-primary animate-pulse"></div>
+<div class="w-2 h-2 rounded-full bg-primary/20"></div>
+<div class="w-2 h-2 rounded-full bg-primary/20"></div>
+</div>
+</div>
+<div class="flex items-center gap-3 mb-8">
+<span class="material-symbols-outlined text-primary">radar</span>
+<h3 class="font-headline text-lg font-bold tracking-wide uppercase">Environmental Data Feed</h3>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-10">
+<div class="space-y-2">
+<label class="text-[10px] text-primary/70 font-bold uppercase tracking-widest">Geospatial Coordinates</label>
+<p class="font-headline text-2xl text-on-surface tracking-tight">40.7128° N, 74.0060° W</p>
+<div class="h-1 w-full bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full w-2/3 bg-primary rounded-full"></div>
+</div>
+</div>
+<div class="space-y-2">
+<label class="text-[10px] text-primary/70 font-bold uppercase tracking-widest">Climate Classification</label>
+<p class="font-headline text-2xl text-on-surface tracking-tight">Humid Subtropical [Cfa]</p>
+<p class="text-sm text-on-surface-variant">Cold winters, hot summers, consistent precipitation throughout the seasons.</p>
+</div>
+<div class="space-y-2">
+<label class="text-[10px] text-primary/70 font-bold uppercase tracking-widest">Vegetation Index</label>
+<p class="font-headline text-2xl text-on-surface tracking-tight">Temperate Deciduous</p>
+<p class="text-sm text-on-surface-variant">Predominance of Oak and Maple. Urban landscaping features Ginkgo Biloba.</p>
+</div>
+<div class="space-y-2">
+<label class="text-[10px] text-primary/70 font-bold uppercase tracking-widest">Architecture Style</label>
+<p class="font-headline text-2xl text-on-surface tracking-tight">Art Deco / Modernist</p>
+<p class="text-sm text-on-surface-variant">Limestone facades, terraced setbacks, and high-density vertical structures.</p>
+</div>
+</div>
+<div class="mt-auto pt-10 border-t border-outline-variant/10">
+<div class="flex items-start gap-4">
+<div class="w-12 h-12 rounded-lg bg-surface-bright flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-primary text-3xl">landscape</span>
+</div>
+<div>
+<label class="text-[10px] text-primary/70 font-bold uppercase tracking-widest">Landmark Hint</label>
+<p class="text-lg text-on-surface leading-snug italic mt-1">"A massive green oxidized copper figure stands sentinel over the harbor, visible from the southern tip of the island."</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Guess Input Field -->
+<div class="glass-panel rounded-xl p-6 flex flex-col md:flex-row gap-4 items-stretch">
+<div class="flex-1 relative group">
+<input class="w-full h-14 bg-surface-container-highest border border-outline-variant/30 rounded-lg px-6 font-medium focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all text-on-surface placeholder:text-on-surface-variant/40" placeholder="Enter city or specific landmark..." type="text"/>
+<span class="absolute right-4 top-1/2 -translate-y-1/2 material-symbols-outlined text-primary/50 group-focus-within:text-primary">language</span>
+</div>
+<button class="bg-primary-container text-on-primary-container px-10 h-14 rounded-lg font-headline font-bold text-sm tracking-[0.2em] uppercase hover:scale-[1.02] active:scale-[0.95] transition-all shadow-lg shadow-primary/10">
+                            Submit Guess
+                        </button>
+</div>
+</div>
+<!-- Intelligence Hub Sidebar -->
+<div class="lg:col-span-4 flex flex-col gap-6">
+<!-- Hint Progression -->
+<div class="glass-panel rounded-xl p-6 flex flex-col gap-6">
+<div class="flex justify-between items-center">
+<h3 class="font-headline text-sm font-bold tracking-widest uppercase flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-sm">hub</span>
+                                Intelligence Hub
+                            </h3>
+<span class="text-[10px] text-on-surface-variant font-mono">ID: 4492-X</span>
+</div>
+<div class="space-y-4">
+<!-- Revealed Hint -->
+<div class="p-4 bg-primary/10 border-l-4 border-primary rounded-r-lg flex items-center justify-between">
+<div>
+<p class="text-[10px] text-primary font-bold uppercase">Continent</p>
+<p class="font-headline font-bold">NORTH AMERICA</p>
+</div>
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<!-- Revealable Hint -->
+<div class="p-4 bg-surface-container-high border-l-4 border-outline-variant rounded-r-lg group cursor-pointer hover:bg-surface-bright transition-colors">
+<div class="flex items-center justify-between">
+<div>
+<p class="text-[10px] text-on-surface-variant font-bold uppercase">Country</p>
+<p class="font-headline font-bold blur-[4px] group-hover:blur-0 transition-all">UNITED STATES</p>
+</div>
+<div class="flex flex-col items-end">
+<span class="material-symbols-outlined text-primary">lock_open</span>
+<span class="text-[9px] text-primary font-bold mt-1">-15 PTS</span>
+</div>
+</div>
+</div>
+<!-- Locked Hint -->
+<div class="p-4 bg-surface-container-low border-l-4 border-outline/20 rounded-r-lg opacity-60">
+<div class="flex items-center justify-between">
+<div>
+<p class="text-[10px] text-on-surface-variant font-bold uppercase">State / Province</p>
+<div class="h-4 w-24 bg-outline-variant/30 rounded mt-1"></div>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant">lock</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Live Feedback Feed -->
+<div class="glass-panel rounded-xl p-6 flex-1 flex flex-col min-h-[300px]">
+<h3 class="font-headline text-sm font-bold tracking-widest uppercase mb-4 flex items-center gap-2">
+<span class="material-symbols-outlined text-error text-sm">history</span>
+                            Transmission Log
+                        </h3>
+<div class="flex-1 space-y-4 overflow-y-auto pr-2 custom-scrollbar">
+<!-- Feedback Item (Incorrect) -->
+<div class="p-3 border border-error/20 bg-error/5 rounded-lg flex gap-3">
+<span class="material-symbols-outlined text-error text-sm shrink-0">close</span>
+<div>
+<p class="text-xs font-bold text-error uppercase mb-1">Negative Match: Chicago</p>
+<p class="text-[11px] text-on-surface-variant leading-relaxed">Coordinates indicate coastal proximity. Subject is too far inland. Adjust vector east.</p>
+</div>
+</div>
+<!-- Feedback Item (Neutral) -->
+<div class="p-3 border border-outline-variant/20 bg-surface-container-highest rounded-lg flex gap-3">
+<span class="material-symbols-outlined text-on-surface-variant text-sm shrink-0">info</span>
+<div>
+<p class="text-xs font-bold text-on-surface uppercase mb-1">System Pulse</p>
+<p class="text-[11px] text-on-surface-variant leading-relaxed">Environmental sensors recalibrated. Landmark hint decrypted.</p>
+</div>
+</div>
+<!-- Feedback Item (Incorrect) -->
+<div class="p-3 border border-error/20 bg-error/5 rounded-lg flex gap-3 opacity-70">
+<span class="material-symbols-outlined text-error text-sm shrink-0">close</span>
+<div>
+<p class="text-xs font-bold text-error uppercase mb-1">Negative Match: London</p>
+<p class="text-[11px] text-on-surface-variant leading-relaxed">Continental drift discrepancy detected. Hemisphere mismatch.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Bottom Mobile Nav (Only visible on small screens) -->
+<div class="md:hidden fixed bottom-0 left-0 right-0 h-16 bg-surface-container-high border-t border-outline-variant/20 flex justify-around items-center z-50">
+<button class="flex flex-col items-center gap-1 text-on-surface-variant">
+<span class="material-symbols-outlined">public</span>
+<span class="text-[10px]">World</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-primary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">analytics</span>
+<span class="text-[10px]">Intel</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-on-surface-variant">
+<span class="material-symbols-outlined">leaderboard</span>
+<span class="text-[10px]">Rank</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-on-surface-variant">
+<span class="material-symbols-outlined">person</span>
+<span class="text-[10px]">Profile</span>
+</button>
+</div>
+</body></html>

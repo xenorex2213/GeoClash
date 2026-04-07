@@ -16,7 +16,11 @@ const gameSchema = new mongoose.Schema({
         type: Date,
         default: Date.now
     },
-
+    mode: {
+        type:String,
+        enum : ["text","map"],
+        default : "text"
+    },
     // 🟢 ROUND CONTROL
     totalRounds: {
         type: Number,
@@ -27,7 +31,6 @@ const gameSchema = new mongoose.Schema({
         type: Number,
         default: 1
     },
-
     // 🌍 CURRENT LOCATION (hidden from guesser)
     location: {
         continent: String,
