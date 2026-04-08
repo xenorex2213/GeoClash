@@ -5,6 +5,42 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>frontend</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+    <script>
+      window.tailwind = window.tailwind || {};
+      window.tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              colors: {
+                "outline-variant": "#474848",
+                "on-surface-variant": "#aaabab",
+                "surface-container": "#181a1a",
+                "surface-dim": "#0d0f0f",
+                "surface": "#0d0f0f",
+                "tertiary": "#7ae6ff",
+                "primary": "#a4ffb9",
+                "primary-container": "#00fd87",
+                "background": "#0d0f0f",
+                "surface-container-highest": "#232626",
+                "surface-container-high": "#1d2020",
+                "surface-container-low": "#121414",
+                "surface-bright": "#2a2d2d",
+                "on-surface": "#ffffff",
+                "on-primary": "#006532"
+              },
+              fontFamily: {
+                headline: ["Space Grotesk"],
+                body: ["Inter"],
+                label: ["Inter"]
+              }
+            }
+          }
+        }
+      };
+    </script>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
   </head>
   <body>
     <div id="root"></div>

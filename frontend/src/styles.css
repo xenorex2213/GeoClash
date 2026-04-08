@@ -417,3 +417,125 @@ a{ color:inherit; }
   .chip,
   .listItem{ transition: none !important; }
 }
+
+/* ---------- Fallback UX layer for utility-heavy screens ---------- */
+.glass-card,
+.glass-panel{
+  background: rgba(35, 38, 38, 0.40);
+  backdrop-filter: blur(20px);
+  border-top: 1px solid rgba(170, 171, 171, 0.20);
+  border-left: 1px solid rgba(170, 171, 171, 0.20);
+  transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+}
+
+.glass-card:hover,
+.glass-panel:hover{
+  transform: translateY(-2px);
+  border-color: rgba(124,255,178,.42);
+  box-shadow: 0 0 0 1px rgba(124,255,178,.24), 0 20px 50px rgba(0,0,0,.35);
+}
+
+/* keep all typed input readable regardless theme/runtime */
+input,
+textarea,
+select{
+  color: #EAF0FF;
+  caret-color: #A4FFB9;
+}
+
+/* hard override for browser/tailwind form defaults causing white-on-white */
+input[type="text"],
+input[type="password"],
+input[type="email"],
+input[type="search"],
+textarea,
+select{
+  background-color: #121414 !important;
+  color: #EAF0FF !important;
+  -webkit-text-fill-color: #EAF0FF !important;
+  border-color: rgba(164,255,185,.26) !important;
+}
+
+input::placeholder,
+textarea::placeholder{
+  color: rgba(234,240,255,.42);
+}
+
+/* prevent white autofill camouflage */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+select:-webkit-autofill{
+  -webkit-text-fill-color: #EAF0FF;
+  -webkit-box-shadow: 0 0 0px 1000px #121414 inset;
+  transition: background-color 9999s ease-in-out 0s;
+}
+
+/* generic interactivity so screens never feel static */
+button{
+  cursor: pointer;
+  transition: transform .12s ease, box-shadow .16s ease, filter .16s ease, background-color .16s ease;
+}
+
+button:hover{
+  transform: translateY(-1px);
+  box-shadow: 0 10px 24px rgba(0,0,0,.28);
+}
+
+button:active{
+  transform: scale(.98);
+}
+
+.material-symbols-outlined {
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
+
+.tech-grid {
+  background-image:
+    linear-gradient(to right, rgba(164, 255, 185, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(164, 255, 185, 0.05) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+.glass-edge {
+  border-top: 1px solid rgba(170, 171, 171, 0.2);
+  border-left: 1px solid rgba(170, 171, 171, 0.2);
+}
+
+.glass-card {
+  background: rgba(35, 38, 38, 0.4);
+  backdrop-filter: blur(20px);
+  border-top: 1px solid rgba(170, 171, 171, 0.2);
+  border-left: 1px solid rgba(170, 171, 171, 0.2);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glass-card:hover {
+  border-color: #a4ffb9;
+  box-shadow: 0 0 20px rgba(164, 255, 185, 0.15);
+}
+
+.glass-panel {
+  background: rgba(35, 38, 38, 0.4);
+  backdrop-filter: blur(20px);
+  border-top: 1px solid rgba(170, 171, 171, 0.2);
+  border-left: 1px solid rgba(170, 171, 171, 0.2);
+}
+
+.gradient-text {
+  background: linear-gradient(135deg, #a4ffb9 0%, #00fd87 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.kinetic-button {
+  background: linear-gradient(135deg, #a4ffb9 0%, #00fd87 100%);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.kinetic-button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 15px rgba(164, 255, 185, 0.4);
+}

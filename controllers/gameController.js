@@ -232,7 +232,7 @@ async function handleCorrect(game, player, playerId, res) {
     });
 }
 
-async function handleWrong(game, player, playerId, res, distance = null) {
+async function handleWrong(game, player, playerId, res, distance = null, guessText = "") {
 
     game.wrongAttempts++;
     player.roundScore -= 10;
@@ -241,7 +241,7 @@ async function handleWrong(game, player, playerId, res, distance = null) {
 
     game.guesses.push({
         playerId,
-        guess: distance ? `${Math.round(distance)} km away` : "",
+        guess: distance ? `${Math.round(distance)} km away` : (guessText || ""),
         timeStamp: new Date()
     });
 
@@ -300,7 +300,7 @@ exports.submitGuess = async (req, res) => {
         if (guess.toLowerCase() === game.location.city.toLowerCase()) {
             return handleCorrect(game, player, playerId, res);
         } else {
-            return handleWrong(game, player, playerId, res);
+            return handleWrong(game, player, playerId, res, null, guess);
         }
     }
 };

@@ -3,66 +3,59 @@ function Waiting({ gameId, playerId, game }) {
 	const ready = playerCount >= 2;
 
 	return (
-		<div className="app">
-			<div className="shell">
-				<div className="topbar">
-					<div className="brand">
-						<div className="logo" aria-hidden="true" />
-						<div className="brandTitle">
-							<strong>GeoGuess</strong>
-							<span>Waiting Room</span>
-						</div>
+		<div className="bg-surface text-on-surface min-h-screen relative overflow-hidden">
+			<nav className="fixed top-0 w-full z-50 bg-slate-950/60 backdrop-blur-xl border-b border-white/10">
+				<div className="flex justify-between items-center w-full px-6 py-4">
+					<div className="font-headline text-2xl font-bold tracking-tighter text-primary">Kinetic Explorer</div>
+					<div className="text-right">
+						<div className="text-[10px] uppercase tracking-widest text-on-surface-variant">Connected as</div>
+						<div className="text-sm font-bold text-primary font-headline">{playerId}</div>
 					</div>
-
-					<span className="chip">
-						<span className="muted">Player</span>
-						<strong>{playerId}</strong>
-					</span>
 				</div>
+			</nav>
 
-				<div className="card">
-					<div className="cardHeader">
-						<h2 className="h2">Game Lobby</h2>
-						<span className={`badge ${ready ? "badgeSuccess" : "badgeAccent"}`}>
-							{ready ? "Starting" : "Waiting"}
-						</span>
+			<main className="min-h-screen pt-24 flex flex-col items-center justify-center relative overflow-hidden px-6">
+				<div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] bg-primary/5 rounded-full blur-[120px] -z-10" />
+
+				<section className="w-full max-w-4xl">
+					<div className="text-center mb-10">
+						<h1 className="text-5xl md:text-7xl font-bold font-headline tracking-tighter text-primary">LOBBY</h1>
+						<p className="text-on-surface-variant tracking-widest uppercase text-xs mt-2">Awaiting second explorer</p>
 					</div>
 
-					<div className="cardInner stack">
-						<div className="toast toastAccent">
-							<div className="rowWrap">
-								<span className="muted">Game ID</span>
-								<strong style={{ letterSpacing: ".18em" }}>{gameId}</strong>
-								<span className="muted">•</span>
-								<span className="muted">Players</span>
-								<strong>{playerCount}/2</strong>
+					<div className="glass-card rounded-xl p-8 border border-white/10">
+						<div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+							<div className="p-4 rounded-lg bg-surface-container-low border border-outline-variant/20">
+								<div className="text-[10px] uppercase tracking-widest text-on-surface-variant">Game ID</div>
+								<div className="text-xl font-headline font-bold tracking-[0.2em] mt-1">{gameId}</div>
 							</div>
-							<div className="small" style={{ marginTop: 6 }}>
-								Share the Game ID with your friend. Roles will be assigned automatically when 2 players join.
+							<div className="p-4 rounded-lg bg-surface-container-low border border-outline-variant/20">
+								<div className="text-[10px] uppercase tracking-widest text-on-surface-variant">Players</div>
+								<div className="text-xl font-headline font-bold mt-1">{playerCount}/2</div>
+							</div>
+							<div className="p-4 rounded-lg bg-surface-container-low border border-outline-variant/20">
+								<div className="text-[10px] uppercase tracking-widest text-on-surface-variant">Status</div>
+								<div className={`text-sm font-bold uppercase tracking-widest mt-2 ${ready ? "text-primary" : "text-tertiary"}`}>
+									{ready ? "Starting" : "Waiting"}
+								</div>
 							</div>
 						</div>
 
 						{!ready ? (
-							<div className="panel">
-								<div className="panelHeader">
-									<h4>What to do</h4>
-								</div>
-								<div className="scroll">
-									<ul className="list">
-										<li className="listItem">Invite Player 2 using the Game ID.</li>
-										<li className="listItem">Once both join, you’ll be assigned Setter/Guesser.</li>
-										<li className="listItem">Setter sets a city; Guesser guesses with hints.</li>
-									</ul>
-								</div>
+							<div className="space-y-3">
+								<div className="text-xs uppercase tracking-widest text-on-surface-variant">Mission checklist</div>
+								<div className="p-4 rounded-lg bg-surface-container-highest border border-outline-variant/20 text-sm">Share the Game ID with Player 2.</div>
+								<div className="p-4 rounded-lg bg-surface-container-highest border border-outline-variant/20 text-sm">When both join, roles are assigned automatically.</div>
+								<div className="p-4 rounded-lg bg-surface-container-highest border border-outline-variant/20 text-sm">Setter locks location, Guesser starts mission.</div>
 							</div>
 						) : (
-							<div className="toast">
-								Both players joined. Starting the round…
+							<div className="p-4 rounded-lg bg-primary/10 border border-primary/30 text-primary font-medium">
+								Both players joined. Initializing round...
 							</div>
 						)}
 					</div>
-				</div>
-			</div>
+				</section>
+			</main>
 		</div>
 	);
 }
