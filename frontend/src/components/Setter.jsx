@@ -2,6 +2,7 @@ import { useState } from "react";
 
 function Setter({ gameId, playerId, game }) {
   const [location, setLocation] = useState("");
+  const [latestAiHint, setLatestAiHint] = useState("");
 
   const handleSet = async () => {
     if (!location) return alert("Enter location");
@@ -20,12 +21,14 @@ function Setter({ gameId, playerId, game }) {
       alert(data.message);
     } else {
       alert("Location set!");
+      setLatestAiHint(data.aiHint || "");
       setLocation("");
     }
   };
 
   const isSet = Boolean(game?.location);
   const incorrectGuesses = game?.guesses || [];
+  const aiHintToShow = latestAiHint || game?.aiHint || "";
 
   return (
     <div className="bg-surface text-on-surface font-body min-h-screen overflow-x-hidden">
@@ -123,6 +126,13 @@ function Setter({ gameId, playerId, game }) {
                 <button className="w-full py-4 bg-primary text-on-primary font-headline font-extrabold uppercase tracking-widest text-sm rounded shadow-[0_0_30px_rgba(164,255,185,0.4)] hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50" onClick={handleSet} disabled={isSet}>
                   {isSet ? "COORDINATES LOCKED" : "CONFIRM COORDINATES"}
                 </button>
+
+                {isSet && aiHintToShow && (
+                  <div className="p-3 rounded-lg border border-[#7AE6FF]/45 bg-[#7AE6FF]/12 text-sm text-[#CFF6FF]">
+                    <div className="text-[10px] uppercase tracking-[0.18em] text-[#7AE6FF] mb-1">AI Popular Hint</div>
+                    {aiHintToShow}
+                  </div>
+                )}
 
                 {isSet && (
                   <div className="text-xs text-on-surface-variant">

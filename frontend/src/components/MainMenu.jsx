@@ -4,6 +4,8 @@ function MainMenu({ playerId, setGameId }) {
   const [joinId, setJoinId] = useState("");
   const [totalRounds, setTotalRounds] = useState(3);
   const [mode,setMode] = useState("text");
+  const selectedOption = "border-[#7AE6FF] bg-[#7AE6FF]/20 text-[#7AE6FF] shadow-[0_0_0_1px_rgba(122,230,255,0.35)]";
+  const unselectedOption = "border-outline-variant/30 text-on-surface-variant hover:border-[#7AE6FF]/55 hover:text-[#BDEFFF]";
 
   // 🎮 Create game
   const handleCreate = async () => {
@@ -86,10 +88,10 @@ function MainMenu({ playerId, setGameId }) {
                 <div>
                   <label className="block text-[10px] uppercase tracking-widest text-on-surface-variant mb-2 font-bold">Session Parameters</label>
                   <div className="grid grid-cols-2 gap-3">
-                    <button className={`flex items-center justify-center p-4 rounded-lg border-2 transition-all ${totalRounds === 3 ? "border-primary bg-primary/5 text-primary" : "border-outline-variant/30 text-on-surface-variant"}`} onClick={() => setTotalRounds(3)} type="button">
+                    <button className={`flex items-center justify-center p-4 rounded-lg border-2 transition-all ${totalRounds === 3 ? selectedOption : unselectedOption}`} onClick={() => setTotalRounds(3)} type="button">
                       3 Rounds
                     </button>
-                    <button className={`flex items-center justify-center p-4 rounded-lg border-2 transition-all ${totalRounds === 5 ? "border-primary bg-primary/5 text-primary" : "border-outline-variant/30 text-on-surface-variant"}`} onClick={() => setTotalRounds(5)} type="button">
+                    <button className={`flex items-center justify-center p-4 rounded-lg border-2 transition-all ${totalRounds === 5 ? selectedOption : unselectedOption}`} onClick={() => setTotalRounds(5)} type="button">
                       5 Rounds
                     </button>
                   </div>
@@ -98,11 +100,11 @@ function MainMenu({ playerId, setGameId }) {
                 <div>
                   <label className="block text-[10px] uppercase tracking-widest text-on-surface-variant mb-2 font-bold">Game Style</label>
                   <div className="grid grid-cols-2 gap-3">
-                    <button className={`flex flex-col items-center justify-center p-4 rounded-lg border-2 transition-all ${mode === "map" ? "border-primary bg-primary/5" : "border-outline-variant/30"}`} onClick={() => setMode("map")} type="button">
+                    <button className={`flex flex-col items-center justify-center p-4 rounded-lg border-2 transition-all ${mode === "map" ? selectedOption : unselectedOption}`} onClick={() => setMode("map")} type="button">
                       <span className="material-symbols-outlined mb-2">map</span>
                       <span className="text-[11px] font-headline font-bold uppercase tracking-wider">Geospatial Map</span>
                     </button>
-                    <button className={`flex flex-col items-center justify-center p-4 rounded-lg border-2 transition-all ${mode === "text" ? "border-primary bg-primary/5" : "border-outline-variant/30"}`} onClick={() => setMode("text")} type="button">
+                    <button className={`flex flex-col items-center justify-center p-4 rounded-lg border-2 transition-all ${mode === "text" ? selectedOption : unselectedOption}`} onClick={() => setMode("text")} type="button">
                       <span className="material-symbols-outlined mb-2">terminal</span>
                       <span className="text-[11px] font-headline font-bold uppercase tracking-wider">Text-Based Input</span>
                     </button>

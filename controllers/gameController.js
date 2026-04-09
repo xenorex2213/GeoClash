@@ -1,6 +1,11 @@
 const Game = require("../models/Game");
 const axios = require("axios");
 
+const { GoogleGenerativeAI } = require("@google/generative-ai");
+const genAI = process.env.GEMINI_API_KEY
+    ? new GoogleGenerativeAI(process.env.GEMINI_API_KEY)
+    : null;
+
 // ---------------- DISTANCE FUNCTION ----------------
 function getDistance(lat1, lon1, lat2, lon2) {
     const R = 6371;
@@ -18,7 +23,42 @@ function getDistance(lat1, lon1, lat2, lon2) {
 
     return R * c;
 }
+async function generateHint(location) {
+    try {
+        if (!genAI) {
+            return "This place is known for a globally recognized landmark and rich local culture.";
+        }
 
+        const model = genAI.getGenerativeModel({
+            model: process.env.GEMINI_MODEL || "gemini-2.5-flash"
+        });
+
+        const prompt = `
+        Give a short, fun, popular 1-line hint firstly  about the country then the place WITHOUT mentioning the place or country name.
+
+        City: ${location.city}
+        Country: ${location.country}
+        
+        Rules : 
+        - Do not reveal the city or place name
+        - Make it like a guessing clue.
+        - Keep it under 18 words.
+        `;
+
+        const result = await model.generateContent(prompt);
+        const response = await result.response;
+        const text = response.text();
+
+        return text
+            .replace(/\s+/g, " ")
+            .replace(/^"|"$/g, "")
+            .trim();
+
+    } catch (err) {
+        console.error("Gemini error:", err);
+        return "This city is famous for a landmark that attracts visitors from around the world.";
+    }
+}
 // ---------------- TEST ----------------
 exports.testController = (req, res) => {
     res.json({ message: "Game controller is working" });
@@ -44,7 +84,8 @@ exports.createGame = async (req, res) => {
 
         guesses: [],
         revealedHints: [],
-        wrongAttempts: 0
+        wrongAttempts: 0,
+        aiHint: null
     });
 
     await game.save();
@@ -86,7 +127,7 @@ exports.joinGame = async (req, res) => {
     game.players.set(playerId, {
         role: null,
         roundScore: 100,
-        totalScore: 0
+        totalScore: 100
     });
 
     if (game.players.size === 2) {
@@ -137,7 +178,6 @@ exports.assignRole = async (req, res) => {
 // ---------------- SET LOCATION ----------------
 exports.setLocation = async (req, res) => {
     const { gameId, playerId, location } = req.body;
-
     const game = await Game.findOne({ gameId });
     if (!game) return res.status(404).json({ message: "Game not found" });
 
@@ -174,11 +214,15 @@ exports.setLocation = async (req, res) => {
             lng: result.geometry.lng
         };
 
+        const aiHint = await generateHint(game.location);
+        game.aiHint = aiHint;
+        game.revealedHints = [aiHint];
+
         game.wrongAttempts = 0;
 
         await game.save();
 
-        res.json({ message: "Location set" });
+        res.json({ message: "Location set", aiHint });
 
     } catch {
         res.status(500).json({ message: "Location error" });
@@ -199,6 +243,7 @@ async function handleCorrect(game, player, playerId, res) {
         revealedHints: game.revealedHints,
         wrongAttempts: game.wrongAttempts,
         winner: playerId,
+        aiHint: game.aiHint,
         scores: new Map([[playerId, roundScore]])
     });
 
@@ -210,6 +255,7 @@ async function handleCorrect(game, player, playerId, res) {
         game.guesses = [];
         game.revealedHints = [];
         game.wrongAttempts = 0;
+        game.aiHint = null;
 
         for (const [id, p] of game.players) {
             p.roundScore = 100;

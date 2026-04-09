@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import Home from "./components/Home";
 import Login from "./components/Login";
 import MainMenu from "./components/MainMenu";
 import Setter from "./components/Setter";
@@ -6,6 +7,7 @@ import Guesser from "./components/Guesser";
 import Waiting from "./components/Waiting";
 
 function App() {
+  const [showHome, setShowHome] = useState(true);
   const [playerId, setPlayerId] = useState("");
   const [gameId, setGameId] = useState("");
   const [game, setGame] = useState(null);
@@ -55,6 +57,10 @@ function App() {
 
   // ---------------- LOGIN ----------------
   if (!playerId) {
+    if (showHome) {
+      return <Home onPlay={() => setShowHome(false)} />;
+    }
+
     return <Login setPlayerId={setPlayerId} />;
   }
 

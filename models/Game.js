@@ -41,6 +41,11 @@ const gameSchema = new mongoose.Schema({
         lng: Number
     },
 
+    aiHint: {
+        type: String,
+        default: null
+    },
+
     // 👥 PLAYERS
     players: {
         type: Map,
@@ -98,6 +103,8 @@ const gameSchema = new mongoose.Schema({
                 wrongAttempts: Number,
 
                 winner: String,
+
+                aiHint: String,
 
                 scores: {
                     type: Map,

@@ -539,3 +539,9 @@ button:active{
   transform: scale(1.05);
   box-shadow: 0 0 15px rgba(164, 255, 185, 0.4);
 }
+
+.topo-overlay {
+  background-image: radial-gradient(#a4ffb9 0.5px, transparent 0.5px);
+  background-size: 24px 24px;
+  opacity: 0.05;
+}
