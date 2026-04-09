@@ -1,5 +1,20 @@
 import { useState } from "react";
-import { MapContainer, TileLayer, useMapEvents } from "react-leaflet";
+import { Marker, MapContainer, TileLayer, Tooltip, useMapEvents } from "react-leaflet";
+import { divIcon } from "leaflet";
+
+const selectedPinIcon = divIcon({
+  className: "custom-selected-pin",
+  html: `
+    <svg width="42" height="56" viewBox="0 0 64 84" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path d="M32 80C32 80 6 45.5 6 28C6 13.64 17.64 2 32 2C46.36 2 58 13.64 58 28C58 45.5 32 80 32 80Z"
+            fill="white" fill-opacity="0.92" stroke="#0A0A0A" stroke-width="6" stroke-linejoin="round"/>
+      <circle cx="32" cy="28" r="10.5" fill="white" stroke="#0A0A0A" stroke-width="6"/>
+    </svg>
+  `,
+  iconSize: [42, 56],
+  iconAnchor: [21, 54],
+  tooltipAnchor: [0, -50]
+});
 
 
 function ClickHandler({ onClick }) {
@@ -14,6 +29,7 @@ function ClickHandler({ onClick }) {
 function Guesser({ gameId, playerId, game }) {
   const [guess, setGuess] = useState("");
   const [coords, setCoords] = useState(null);
+  const player = game?.players?.[playerId];
 
   const handleTextGuess = async () => {
     if (!guess.trim()) return;
@@ -50,44 +66,69 @@ function Guesser({ gameId, playerId, game }) {
     <div className="bg-surface font-body text-on-surface min-h-screen overflow-hidden">
       <nav className="fixed top-0 w-full z-50 bg-slate-950/60 backdrop-blur-xl border-b border-white/10 flex justify-between items-center px-6 h-16 shadow-[0_0_40px_rgba(164,255,185,0.06)]">
         <div className="flex items-center gap-4">
-          <span className="text-2xl font-bold tracking-tighter text-emerald-400 font-headline">The Kinetic Explorer</span>
+          <span className="text-2xl font-bold tracking-tighter text-emerald-400 font-headline">GeoClash</span>
         </div>
         <div className="text-xs uppercase tracking-widest text-on-surface-variant">Guesser • {game?.mode || "-"} mode</div>
       </nav>
 
-      <aside className="fixed left-0 top-0 h-full w-64 z-40 bg-slate-900/40 backdrop-blur-2xl border-r border-white/5 flex-col pt-20 pb-8 px-4 hidden md:flex">
-        <div className="mb-10 px-4">
-          <h2 className="font-headline text-xl uppercase tracking-widest text-emerald-400">GeoGuess</h2>
-          <p className="text-[10px] text-slate-500 uppercase tracking-[0.2em]">{playerId}</p>
-        </div>
-      </aside>
+      {game?.mode !== "map" && (
+        <aside className="fixed left-0 top-0 h-full w-64 z-40 bg-slate-900/40 backdrop-blur-2xl border-r border-white/5 flex-col pt-20 pb-8 px-4 hidden md:flex">
+          <div className="mb-10 px-4">
+            <p className="text-[10px] text-slate-500 uppercase tracking-[0.2em]">{playerId}</p>
+          </div>
+        </aside>
+      )}
 
       {game?.mode === "map" ? (
-        <main className="pl-0 md:pl-64 pt-16 h-screen w-full relative">
+        <main className="pt-16 h-screen w-full relative">
           <div className="absolute inset-0 z-0">
-            <MapContainer center={[20, 0]} zoom={2} style={{ height: "100%", width: "100%" }}>
-              <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+            <MapContainer center={[20, 0]} zoom={2} style={{height : "100vh"}}>
+            <TileLayer url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png" />
+
+       
               <ClickHandler onClick={setCoords} />
+              {coords && (
+                <Marker position={[coords.lat, coords.lng]} icon={selectedPinIcon}>
+                  <Tooltip direction="top" offset={[0, -8]} permanent>
+                    Selected
+                  </Tooltip>
+                </Marker>
+              )}
             </MapContainer>
           </div>
 
-          <div className="relative z-10 h-full w-full p-8 flex flex-col gap-8 pointer-events-none">
-            <div className="glass-panel p-6 rounded-xl max-w-lg pointer-events-auto">
-              <span className="font-label uppercase tracking-widest text-[10px] text-primary">Map Triangulation</span>
-              <h2 className="font-headline text-2xl font-bold mt-2">Select Coordinates</h2>
-              <div className="text-xs text-on-surface-variant mt-2">
-                {coords ? `Selected: ${coords.lat.toFixed(2)}, ${coords.lng.toFixed(2)}` : "Click anywhere on the map."}
-              </div>
-              <button className="mt-4 w-full py-3 bg-primary text-on-primary font-headline font-bold uppercase tracking-widest rounded shadow-[0_0_20px_rgba(164,255,185,0.2)] pointer-events-auto" onClick={handleMapGuess}>
-                Submit Location
-              </button>
-            </div>
+          <div className="relative z-10 h-full w-full p-4 md:p-8 pointer-events-none">
+            <div className="flex h-full justify-between items-start gap-4 md:gap-8">
+              <div className="pointer-events-auto w-full max-w-lg flex flex-col gap-4">
+                <div className="glass-panel p-6 rounded-xl">
+                  <span className="font-label uppercase tracking-widest text-[10px] text-primary">Map Triangulation</span>
+                  <h2 className="font-headline text-2xl font-bold mt-2">Select Coordinates</h2>
+                  <div className="text-xs text-on-surface-variant mt-2">
+                    {coords ? `Selected: ${coords.lat.toFixed(2)}, ${coords.lng.toFixed(2)}` : "Click anywhere on the map."}
+                  </div>
+                  <button className="mt-4 w-full py-3 bg-primary text-on-primary font-headline font-bold uppercase tracking-widest rounded shadow-[0_0_20px_rgba(164,255,185,0.2)]" onClick={handleMapGuess}>
+                    Submit Location
+                  </button>
+                </div>
 
-            <div className="glass-panel p-6 rounded-xl mt-auto max-w-lg pointer-events-auto">
-              <h3 className="font-headline text-sm font-bold uppercase tracking-widest mb-3">Revealed Hints</h3>
-              <ul className="space-y-2 text-sm text-on-surface-variant max-h-48 overflow-y-auto">
-                {game?.revealedHints?.length ? game.revealedHints.map((h, i) => <li key={i} className="p-2 bg-surface-container-high rounded">{h}</li>) : <li>No hints yet.</li>}
-              </ul>
+                <div className="glass-panel p-6 rounded-xl">
+                  <h3 className="font-headline text-sm font-bold uppercase tracking-widest mb-3">Revealed Hints</h3>
+                  <ul className="space-y-2 text-sm text-on-surface-variant max-h-64 overflow-y-auto">
+                    {game?.revealedHints?.length ? game.revealedHints.map((h, i) => <li key={i} className="p-2 bg-surface-container-high rounded">{h}</li>) : <li>No hints yet.</li>}
+                  </ul>
+                </div>
+              </div>
+
+              <div className="pointer-events-auto w-[280px] hidden md:block">
+                <div className="glass-panel p-6 rounded-xl">
+                  <h3 className="font-headline text-sm font-bold uppercase tracking-widest mb-3">Score</h3>
+                  <div className="space-y-2 text-sm">
+                    <div className="flex justify-between"><span className="text-on-surface-variant">Round Score</span><span className="text-primary font-bold">{player?.roundScore ?? 0}</span></div>
+                    <div className="flex justify-between"><span className="text-on-surface-variant">Total Score</span><span className="text-primary font-bold">{player?.totalScore ?? 0}</span></div>
+                    <div className="flex justify-between"><span className="text-on-surface-variant">Wrong Attempts</span><span>{game?.wrongAttempts ?? 0}</span></div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </main>
@@ -128,6 +169,8 @@ function Guesser({ gameId, playerId, game }) {
               <div className="lg:col-span-4 flex flex-col gap-6">
                 <div className="glass-panel rounded-xl p-6 flex flex-col gap-4">
                   <h3 className="font-headline text-sm font-bold tracking-widest uppercase">Mission Data</h3>
+                  <div className="flex justify-between text-sm"><span className="text-on-surface-variant">Round Score</span><span className="text-primary font-bold">{player?.roundScore ?? 0}</span></div>
+                  <div className="flex justify-between text-sm"><span className="text-on-surface-variant">Total Score</span><span className="text-primary font-bold">{player?.totalScore ?? 0}</span></div>
                   <div className="flex justify-between text-sm"><span className="text-on-surface-variant">Round</span><span>{game?.currentRound}/{game?.totalRounds}</span></div>
                   <div className="flex justify-between text-sm"><span className="text-on-surface-variant">Wrong Attempts</span><span>{game?.wrongAttempts ?? 0}</span></div>
                   <div className="flex justify-between text-sm"><span className="text-on-surface-variant">Guesses</span><span>{game?.guesses?.length || 0}</span></div>

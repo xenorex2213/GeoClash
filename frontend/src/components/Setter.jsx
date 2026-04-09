@@ -3,6 +3,7 @@ import { useState } from "react";
 function Setter({ gameId, playerId, game }) {
   const [location, setLocation] = useState("");
   const [latestAiHint, setLatestAiHint] = useState("");
+  const player = game?.players?.[playerId];
 
   const handleSet = async () => {
     if (!location) return alert("Enter location");
@@ -74,8 +75,9 @@ function Setter({ gameId, playerId, game }) {
           <div className="flex justify-between items-start">
             <div className="glass-panel p-6 rounded-xl flex flex-col gap-2">
               <span className="font-label uppercase tracking-widest text-[10px] text-primary">Active Targeting</span>
-              <h2 className="font-headline text-3xl font-extrabold tracking-tighter text-on-surface">
-                {isSet ? `${game.location?.city || "TARGET"}, ${game.location?.country || "--"}` : "TARGET UNSET"}
+              <h2 className="font-headline text-3xl font-extrabold tracking-tighter text-on-surface flex items-center gap-2">
+                {isSet && <span className="material-symbols-outlined text-primary">location_on</span>}
+                <span>{isSet ? `${game.location?.city || "TARGET"}, ${game.location?.country || "--"}` : "TARGET UNSET"}</span>
               </h2>
               <div className="flex gap-4 items-center">
                 <div className="flex flex-col">
@@ -109,6 +111,14 @@ function Setter({ gameId, playerId, game }) {
                 </div>
 
                 <div className="space-y-3">
+                  <div className="flex justify-between items-center p-3 bg-white/5 rounded-lg border border-white/10">
+                    <span className="font-label text-xs uppercase tracking-wider text-slate-300">Round Score</span>
+                    <span className="font-headline text-sm font-bold text-primary">{player?.roundScore ?? 0}</span>
+                  </div>
+                  <div className="flex justify-between items-center p-3 bg-white/5 rounded-lg border border-white/10">
+                    <span className="font-label text-xs uppercase tracking-wider text-slate-300">Total Score</span>
+                    <span className="font-headline text-sm font-bold text-primary">{player?.totalScore ?? 0}</span>
+                  </div>
                   <div className="flex justify-between items-center p-3 bg-white/5 rounded-lg border border-white/10">
                     <span className="font-label text-xs uppercase tracking-wider text-slate-300">Mode</span>
                     <span className="font-headline text-sm font-bold uppercase text-primary">{game?.mode || "text"}</span>
