@@ -24,13 +24,19 @@ const gameSchema = new mongoose.Schema({
     // 🟢 ROUND CONTROL
     totalRounds: {
         type: Number,
-        default: 3
+        default: 2
     },
 
     currentRound: {
         type: Number,
         default: 1
     },
+
+    lastSetterId: {
+        type: String,
+        default: null
+    },
+
     // 🌍 CURRENT LOCATION (hidden from guesser)
     location: {
         continent: String,

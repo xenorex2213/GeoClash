@@ -1,9 +1,9 @@
 const Game = require("../models/Game");
 const axios = require("axios");
+const Groq = require("groq-sdk");
 
-const { GoogleGenerativeAI } = require("@google/generative-ai");
-const genAI = process.env.GEMINI_API_KEY
-    ? new GoogleGenerativeAI(process.env.GEMINI_API_KEY)
+const groq = process.env.GROQ_API_KEY
+    ? new Groq({ apiKey: process.env.GROQ_API_KEY })
     : null;
 
 // ---------------- DISTANCE FUNCTION ----------------
@@ -25,29 +25,37 @@ function getDistance(lat1, lon1, lat2, lon2) {
 }
 async function generateHint(location) {
     try {
-        if (!genAI) {
+        if (!groq) {
             return "This place is known for a globally recognized landmark and rich local culture.";
         }
 
-        const model = genAI.getGenerativeModel({
-            model: process.env.GEMINI_MODEL || "gemini-2.5-flash"
+        const prompt = `Give one short, fun, popular 1-line hint about this place without mentioning city or country name.
+
+City: ${location.city}
+Country: ${location.country}
+
+Rules:
+- Do not reveal the city or country name
+- Make it a guessing clue
+- Keep it under 18 words`;
+
+        const completion = await groq.chat.completions.create({
+            model: process.env.GROQ_MODEL || "llama-3.1-8b-instant",
+            temperature: 0.7,
+            max_completion_tokens: 80,
+            messages: [
+                {
+                    role: "system",
+                    content: "You generate concise geography clues for a guessing game."
+                },
+                {
+                    role: "user",
+                    content: prompt
+                }
+            ]
         });
 
-        const prompt = `
-        Give a short, fun, popular 1-line hint firstly  about the country then the place WITHOUT mentioning the place or country name.
-
-        City: ${location.city}
-        Country: ${location.country}
-        
-        Rules : 
-        - Do not reveal the city or place name
-        - Make it like a guessing clue.
-        - Keep it under 18 words.
-        `;
-
-        const result = await model.generateContent(prompt);
-        const response = await result.response;
-        const text = response.text();
+        const text = completion?.choices?.[0]?.message?.content || "";
 
         return text
             .replace(/\s+/g, " ")
@@ -55,7 +63,7 @@ async function generateHint(location) {
             .trim();
 
     } catch (err) {
-        console.error("Gemini error:", err);
+        console.error("Groq hint error:", err?.message || err);
         return "This city is famous for a landmark that attracts visitors from around the world.";
     }
 }
@@ -67,6 +75,8 @@ exports.testController = (req, res) => {
 // ---------------- CREATE GAME ----------------
 exports.createGame = async (req, res) => {
     const gameId = Math.random().toString(10).substring(2, 6);
+    const requestedRounds = Number(req.body.totalRounds);
+    const totalRounds = [2, 4].includes(requestedRounds) ? requestedRounds : 2;
 
     const game = new Game({
         gameId,
@@ -78,7 +88,7 @@ exports.createGame = async (req, res) => {
         location: null,
         players: new Map(),
 
-        totalRounds: req.body.totalRounds || 3,
+        totalRounds,
         currentRound: 1,
         rounds: [],
 
@@ -127,7 +137,7 @@ exports.joinGame = async (req, res) => {
     game.players.set(playerId, {
         role: null,
         roundScore: 100,
-        totalScore: 100
+        totalScore: 0
     });
 
     if (game.players.size === 2) {
@@ -154,19 +164,26 @@ exports.assignRole = async (req, res) => {
         return res.status(400).json({ message: "Need 2 players" });
     }
 
-    let p1 = game.players.get(ids[0]);
-    let p2 = game.players.get(ids[1]);
+    // Round 1: random setter. Later rounds: enforce alternation.
+    let setterId = game.lastSetterId;
 
-    if (Math.random() < 0.5) {
-        p1.role = "setter";
-        p2.role = "guesser";
+    if (!setterId || !ids.includes(setterId)) {
+        setterId = Math.random() < 0.5 ? ids[0] : ids[1];
     } else {
-        p2.role = "setter";
-        p1.role = "guesser";
+        setterId = ids.find((id) => id !== setterId) || setterId;
     }
 
-    game.players.set(ids[0], p1);
-    game.players.set(ids[1], p2);
+    const guesserId = ids.find((id) => id !== setterId);
+
+    const setter = game.players.get(setterId);
+    const guesser = game.players.get(guesserId);
+
+    setter.role = "setter";
+    guesser.role = "guesser";
+
+    game.players.set(setterId, setter);
+    game.players.set(guesserId, guesser);
+    game.lastSetterId = setterId;
 
     game.status = "playing";
 
@@ -230,12 +247,25 @@ exports.setLocation = async (req, res) => {
 };
 
 // ---------------- HELPER FUNCTIONS ----------------
-async function handleCorrect(game, player, playerId, res) {
+async function handleCorrect(game, player, playerId, res, finalGuessText = null) {
+
+    if (finalGuessText) {
+        game.guesses.push({
+            playerId,
+            guess: finalGuessText,
+            timeStamp: new Date()
+        });
+    }
 
     const roundScore = player.roundScore;
 
     player.totalScore += roundScore;
     game.players.set(playerId, player);
+
+    const roundScores = {};
+    for (const [id, p] of game.players.entries()) {
+        roundScores[id] = p.roundScore;
+    }
 
     game.rounds.push({
         roundNumber: game.currentRound,
@@ -244,7 +274,11 @@ async function handleCorrect(game, player, playerId, res) {
         wrongAttempts: game.wrongAttempts,
         winner: playerId,
         aiHint: game.aiHint,
-        scores: new Map([[playerId, roundScore]])
+        scores: roundScores,
+        location: {
+            city: game.location?.city || null,
+            country: game.location?.country || null
+        }
     });
 
     if (game.currentRound < game.totalRounds) {
@@ -334,7 +368,7 @@ exports.submitGuess = async (req, res) => {
         const distance = getDistance(lat, lng, game.location.lat, game.location.lng);
 
         if (distance <= 1000) {
-            return handleCorrect(game, player, playerId, res);
+            return handleCorrect(game, player, playerId, res, `${Math.round(distance)} km away (correct range)`);
         } else {
             return handleWrong(game, player, playerId, res, distance);
         }
@@ -344,7 +378,7 @@ exports.submitGuess = async (req, res) => {
     if (game.mode === "text") {
 
         if (guess.toLowerCase() === game.location.city.toLowerCase()) {
-            return handleCorrect(game, player, playerId, res);
+            return handleCorrect(game, player, playerId, res, guess);
         } else {
             return handleWrong(game, player, playerId, res, null, guess);
         }

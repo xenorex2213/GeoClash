@@ -1,4 +1,4 @@
-function Home({ onPlay }) {
+function Home({ onPlay, onLogin, onSignup }) {
   return (
     <div className="text-on-background bg-surface min-h-screen overflow-x-hidden selection:bg-primary selection:text-on-primary">
       <header className="fixed top-0 w-full z-50 bg-[#0d0f0f] border-b border-[#a4ffb9]/15 shadow-[0_0_20px_rgba(164,255,185,0.05)]">
@@ -15,10 +15,10 @@ function Home({ onPlay }) {
               <span className="material-symbols-outlined text-[#a4ffb9] cursor-pointer hover:opacity-80">language</span>
               <span className="material-symbols-outlined text-[#a4ffb9] cursor-pointer hover:opacity-80">public</span>*
             </div>*/}
-            <button type="button" className="px-4 py-2 text-slate-400 text-sm font-medium hover:bg-[#a4ffb9]/10 rounded active:scale-95">
+            <button type="button" onClick={onLogin} className="px-4 py-2 text-slate-400 text-sm font-medium hover:bg-[#a4ffb9]/10 rounded active:scale-95">
               Login
             </button>
-            <button type="button" className="px-5 py-2 bg-[#a4ffb9] text-[#006532] font-bold text-sm rounded shadow-lg hover:shadow-[#a4ffb9]/20 active:scale-95">
+            <button type="button" onClick={onSignup} className="px-5 py-2 bg-[#a4ffb9] text-[#006532] font-bold text-sm rounded shadow-lg hover:shadow-[#a4ffb9]/20 active:scale-95">
               Sign Up
             </button>
           </div>
@@ -46,17 +46,14 @@ function Home({ onPlay }) {
               Precision Navigation &amp; Global Reconnaissance. Challenge your perception in the ultimate multiplayer geospatial hunt.
             </p>
 
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
+            <div className="flex items-center justify-center">
               <button
                 type="button"
                 onClick={onPlay}
-                className="group relative px-10 py-5 bg-gradient-to-br from-primary to-primary-container text-on-primary font-headline font-bold text-lg rounded-lg shadow-[0_0_30px_rgba(164,255,185,0.3)] transition-all duration-500 hover:scale-105 hover:shadow-[0_0_50px_rgba(164,255,185,0.5)] active:scale-95 overflow-hidden"
+                className="group relative w-full max-w-[360px] px-10 py-5 bg-gradient-to-br from-primary to-primary-container text-on-primary font-headline font-bold text-lg rounded-lg shadow-[0_0_30px_rgba(164,255,185,0.3)] transition-all duration-500 hover:scale-105 hover:shadow-[0_0_50px_rgba(164,255,185,0.5)] active:scale-95 overflow-hidden"
               >
                 <span className="relative z-10 uppercase tracking-widest">Play Now</span>
                 <div className="absolute inset-0 bg-white/20 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700 ease-in-out" />
-              </button>
-              <button type="button" className="px-8 py-5 text-on-surface font-headline font-bold text-lg border border-outline-variant/30 hover:border-primary/50 transition-colors rounded-lg glass-card">
-                Tutorial
               </button>
             </div>
           </div>

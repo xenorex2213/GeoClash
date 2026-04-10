@@ -8,6 +8,7 @@ import Waiting from "./components/Waiting";
 
 function App() {
   const [showHome, setShowHome] = useState(true);
+  const [authMode, setAuthMode] = useState("login");
   const [playerId, setPlayerId] = useState("");
   const [gameId, setGameId] = useState("");
   const [game, setGame] = useState(null);
@@ -58,10 +59,25 @@ function App() {
   // ---------------- LOGIN ----------------
   if (!playerId) {
     if (showHome) {
-      return <Home onPlay={() => setShowHome(false)} />;
+      return (
+        <Home
+          onPlay={() => {
+            setAuthMode("login");
+            setShowHome(false);
+          }}
+          onLogin={() => {
+            setAuthMode("login");
+            setShowHome(false);
+          }}
+          onSignup={() => {
+            setAuthMode("signup");
+            setShowHome(false);
+          }}
+        />
+      );
     }
 
-    return <Login setPlayerId={setPlayerId} />;
+    return <Login setPlayerId={setPlayerId} initialMode={authMode} />;
   }
 
   // ---------------- MENU ----------------
@@ -142,6 +158,54 @@ function App() {
                   </div>
                 </div>
               ))}
+            </div>
+
+            <div className="mt-8">
+              <div className="text-xs uppercase tracking-widest text-on-surface-variant mb-3">Round History</div>
+              <div className="space-y-3 max-h-[320px] overflow-y-auto pr-1">
+                {game?.rounds?.length ? (
+                  game.rounds.map((round, idx) => (
+                    <div key={idx} className="p-4 rounded-lg bg-surface-container-highest border border-outline-variant/20">
+                      <div className="flex flex-wrap items-center justify-between gap-2">
+                        <div className="font-headline font-bold text-primary">Round {round.roundNumber}</div>
+                        <div className="text-xs uppercase tracking-widest text-on-surface-variant">
+                          Winner: <span className="text-on-surface">{round.winner || "—"}</span>
+                        </div>
+                      </div>
+
+                      <div className="mt-2 grid grid-cols-1 md:grid-cols-3 gap-2 text-sm">
+                        <div>
+                          <span className="text-on-surface-variant">Incorrect Attempts: </span>
+                          <strong>{round.wrongAttempts ?? 0}</strong>
+                        </div>
+                        <div>
+                          <span className="text-on-surface-variant">Guesses Made: </span>
+                          <strong>{round?.guesses?.length || 0}</strong>
+                        </div>
+                        <div>
+                          <span className="text-on-surface-variant">Location: </span>
+                          <strong>{round?.location?.city || "—"}{round?.location?.country ? `, ${round.location.country}` : ""}</strong>
+                        </div>
+                      </div>
+
+                      {!!round?.guesses?.length && (
+                        <div className="mt-2 text-sm">
+                          <div className="text-on-surface-variant mb-1">Attempts:</div>
+                          <ul className="space-y-1">
+                            {round.guesses.map((g, i) => (
+                              <li key={i} className="text-on-surface/90">
+                                {g.playerId}: {g.guess || "Incorrect guess"}
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+                    </div>
+                  ))
+                ) : (
+                  <div className="text-sm text-on-surface-variant">No round history available.</div>
+                )}
+              </div>
             </div>
 
             <div className="mt-8 text-center text-xs uppercase tracking-widest text-on-surface-variant">Refresh to start a new mission</div>

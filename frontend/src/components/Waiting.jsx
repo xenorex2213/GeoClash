@@ -6,7 +6,7 @@ function Waiting({ gameId, playerId, game }) {
 		<div className="bg-surface text-on-surface min-h-screen relative overflow-hidden">
 			<nav className="fixed top-0 w-full z-50 bg-slate-950/60 backdrop-blur-xl border-b border-white/10">
 				<div className="flex justify-between items-center w-full px-6 py-4">
-					<div className="font-headline text-2xl font-bold tracking-tighter text-primary">Kinetic Explorer</div>
+					<div className="font-headline text-2xl font-bold tracking-tighter text-primary">GeoClash</div>
 					<div className="text-right">
 						<div className="text-[10px] uppercase tracking-widest text-on-surface-variant">Connected as</div>
 						<div className="text-sm font-bold text-primary font-headline">{playerId}</div>

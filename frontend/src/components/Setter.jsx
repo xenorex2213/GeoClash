@@ -35,12 +35,10 @@ function Setter({ gameId, playerId, game }) {
     <div className="bg-surface text-on-surface font-body min-h-screen overflow-x-hidden">
       <header className="fixed top-0 w-full z-50 bg-slate-950/60 backdrop-blur-xl border-b border-white/10 shadow-[0_8px_32px_0_rgba(0,0,0,0.37)] flex justify-between items-center px-6 py-4">
         <div className="flex items-center gap-4">
-          <h1 className="text-2xl font-bold tracking-tighter text-[#a4ffb9] drop-shadow-[0_0_8px_rgba(164,255,185,0.4)] font-headline">Kinetic Explorer</h1>
+          <h1 className="text-2xl font-bold tracking-tighter text-[#a4ffb9] drop-shadow-[0_0_8px_rgba(164,255,185,0.4)] font-headline">GeoClash</h1>
         </div>
-        <div className="hidden md:flex gap-8 items-center mr-8">
-          <span className="text-slate-400 font-medium font-headline uppercase tracking-widest text-xs">Explore</span>
+        <div className="hidden md:flex items-center mr-8">
           <span className="text-[#a4ffb9] font-bold border-b-2 border-[#a4ffb9] pb-1 font-headline uppercase tracking-widest text-xs">Set Location</span>
-          <span className="text-slate-400 font-medium font-headline uppercase tracking-widest text-xs">Community</span>
         </div>
       </header>
 

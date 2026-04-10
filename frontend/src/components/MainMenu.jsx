@@ -2,7 +2,7 @@ import { useState } from "react";
 
 function MainMenu({ playerId, setGameId }) {
   const [joinId, setJoinId] = useState("");
-  const [totalRounds, setTotalRounds] = useState(3);
+  const [totalRounds, setTotalRounds] = useState(2);
   const [mode,setMode] = useState("text");
   const selectedOption = "border-[#7AE6FF] bg-[#7AE6FF]/20 text-[#7AE6FF] shadow-[0_0_0_1px_rgba(122,230,255,0.35)]";
   const unselectedOption = "border-outline-variant/30 text-on-surface-variant hover:border-[#7AE6FF]/55 hover:text-[#BDEFFF]";
@@ -53,7 +53,7 @@ function MainMenu({ playerId, setGameId }) {
       <nav className="fixed top-0 w-full z-50 bg-slate-950/60 backdrop-blur-xl border-b border-white/10 shadow-[0_8px_32px_0_rgba(0,0,0,0.37)]">
         <div className="flex justify-between items-center w-full px-6 py-4">
           <div className="flex items-center gap-4">
-            <span className="font-headline text-2xl font-bold tracking-tighter text-[#a4ffb9] drop-shadow-[0_0_8px_rgba(164,255,185,0.4)]">Kinetic Explorer</span>
+            <span className="font-headline text-2xl font-bold tracking-tighter text-[#a4ffb9] drop-shadow-[0_0_8px_rgba(164,255,185,0.4)]">GeoClash</span>
           </div>
           <div className="flex items-center gap-6">
             <div className="flex flex-col items-end hidden sm:flex">
@@ -88,11 +88,11 @@ function MainMenu({ playerId, setGameId }) {
                 <div>
                   <label className="block text-[10px] uppercase tracking-widest text-on-surface-variant mb-2 font-bold">Session Parameters</label>
                   <div className="grid grid-cols-2 gap-3">
-                    <button className={`flex items-center justify-center p-4 rounded-lg border-2 transition-all ${totalRounds === 3 ? selectedOption : unselectedOption}`} onClick={() => setTotalRounds(3)} type="button">
-                      3 Rounds
+                    <button className={`flex items-center justify-center p-4 rounded-lg border-2 transition-all ${totalRounds === 2 ? selectedOption : unselectedOption}`} onClick={() => setTotalRounds(2)} type="button">
+                      2 Rounds
                     </button>
-                    <button className={`flex items-center justify-center p-4 rounded-lg border-2 transition-all ${totalRounds === 5 ? selectedOption : unselectedOption}`} onClick={() => setTotalRounds(5)} type="button">
-                      5 Rounds
+                    <button className={`flex items-center justify-center p-4 rounded-lg border-2 transition-all ${totalRounds === 4 ? selectedOption : unselectedOption}`} onClick={() => setTotalRounds(4)} type="button">
+                      4 Rounds
                     </button>
                   </div>
                 </div>
