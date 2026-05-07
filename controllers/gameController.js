@@ -6,7 +6,6 @@ const groq = process.env.GROQ_API_KEY
     ? new Groq({ apiKey: process.env.GROQ_API_KEY })
     : null;
 
-// ---------------- DISTANCE FUNCTION ----------------
 function getDistance(lat1, lon1, lat2, lon2) {
     const R = 6371;
 
@@ -67,12 +66,10 @@ Rules:
         return "This city is famous for a landmark that attracts visitors from around the world.";
     }
 }
-// ---------------- TEST ----------------
 exports.testController = (req, res) => {
     res.json({ message: "Game controller is working" });
 };
 
-// ---------------- CREATE GAME ----------------
 exports.createGame = async (req, res) => {
     const gameId = Math.random().toString(10).substring(2, 6);
     const requestedRounds = Number(req.body.totalRounds);
@@ -103,7 +100,6 @@ exports.createGame = async (req, res) => {
     res.json({ message: "Game created", gameId });
 };
 
-// ---------------- GET GAME ----------------
 exports.getGame = async (req, res) => {
     const { gameId } = req.params;
     const { playerId } = req.query;
@@ -123,7 +119,6 @@ exports.getGame = async (req, res) => {
     res.json({ game: gameData });
 };
 
-// ---------------- JOIN GAME ----------------
 exports.joinGame = async (req, res) => {
     const { gameId, playerId } = req.body;
 
@@ -148,7 +143,6 @@ exports.joinGame = async (req, res) => {
     res.json({ message: "Joined successfully" });
 };
 
-// ---------------- ASSIGN ROLE ----------------
 exports.assignRole = async (req, res) => {
     const { gameId } = req.body;
 
@@ -164,7 +158,6 @@ exports.assignRole = async (req, res) => {
         return res.status(400).json({ message: "Need 2 players" });
     }
 
-    // Round 1: random setter. Later rounds: enforce alternation.
     let setterId = game.lastSetterId;
 
     if (!setterId || !ids.includes(setterId)) {
@@ -192,7 +185,6 @@ exports.assignRole = async (req, res) => {
     res.json({ players: Object.fromEntries(game.players) });
 };
 
-// ---------------- SET LOCATION ----------------
 exports.setLocation = async (req, res) => {
     const { gameId, playerId, location } = req.body;
     const game = await Game.findOne({ gameId });
@@ -246,7 +238,6 @@ exports.setLocation = async (req, res) => {
     }
 };
 
-// ---------------- HELPER FUNCTIONS ----------------
 async function handleCorrect(game, player, playerId, res, finalGuessText = null) {
 
     if (finalGuessText) {
@@ -342,7 +333,6 @@ async function handleWrong(game, player, playerId, res, distance = null, guessTe
     });
 }
 
-// ---------------- SUBMIT GUESS ----------------
 exports.submitGuess = async (req, res) => {
     const { gameId, playerId, guess, lat, lng } = req.body;
 
@@ -367,14 +357,13 @@ exports.submitGuess = async (req, res) => {
 
         const distance = getDistance(lat, lng, game.location.lat, game.location.lng);
 
-        if (distance <= 1000) {
+        if (distance <= 300) {
             return handleCorrect(game, player, playerId, res, `${Math.round(distance)} km away (correct range)`);
         } else {
             return handleWrong(game, player, playerId, res, distance);
         }
     }
 
-    // 📝 TEXT MODE
     if (game.mode === "text") {
 
         if (guess.toLowerCase() === game.location.city.toLowerCase()) {
