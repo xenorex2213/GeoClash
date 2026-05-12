@@ -1,7 +1,7 @@
 const Game = require("../models/Game");
 const axios = require("axios");
 const Groq = require("groq-sdk");
-
+const turnSeconds = 60;
 const groq = process.env.GROQ_API_KEY
     ? new Groq({ apiKey: process.env.GROQ_API_KEY })
     : null;
@@ -188,6 +188,7 @@ exports.assignRole = async (req, res) => {
 exports.setLocation = async (req, res) => {
     const { gameId, playerId, location } = req.body;
     const game = await Game.findOne({ gameId });
+
     if (!game) return res.status(404).json({ message: "Game not found" });
 
     const player = game.players.get(playerId);
@@ -228,10 +229,10 @@ exports.setLocation = async (req, res) => {
         game.revealedHints = [aiHint];
 
         game.wrongAttempts = 0;
-
+        game.timeExpires = new Date(Date.now()+turnSeconds*1000);
         await game.save();
 
-        res.json({ message: "Location set", aiHint });
+        res.json({ message: "Location set", aiHint, timeExpires: game.timeExpires });
 
     } catch {
         res.status(500).json({ message: "Location error" });
@@ -281,7 +282,7 @@ async function handleCorrect(game, player, playerId, res, finalGuessText = null)
         game.revealedHints = [];
         game.wrongAttempts = 0;
         game.aiHint = null;
-
+        game.timeExpires = null;
         for (const [id, p] of game.players) {
             p.roundScore = 100;
             game.players.set(id, p);
@@ -347,7 +348,22 @@ exports.submitGuess = async (req, res) => {
     if (!game.location) {
         return res.status(400).json({ message: "Location not set" });
     }
-
+    // allow guesser to forfeit (give up)
+    if (req.body.forfeit) {
+        const setterId = Array.from(game.players.keys()).find(
+            (id) => game.players.get(id)?.role === "setter"
+        );
+        const setter = game.players.get(setterId);
+        return handleCorrect(game, setter, setterId, res, "Forfeit");
+    }
+    if(game.timeExpires && Date.now() > new Date(game.timeExpires).getTime()){
+         const setterId = Array.from(game.players.keys()).find(
+        (id) => game.players.get(id)?.role === "setter"
+    );
+        const setter = game.players.get(setterId);
+        return handleCorrect(game, setter, setterId, res, "Timeout");
+    }
+    
     // 🗺️ MAP MODE
     if (game.mode === "map") {
 
@@ -372,4 +388,5 @@ exports.submitGuess = async (req, res) => {
             return handleWrong(game, player, playerId, res, null, guess);
         }
     }
+    
 };

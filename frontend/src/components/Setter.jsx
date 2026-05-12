@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 function Setter({ gameId, playerId, game }) {
   const [location, setLocation] = useState("");
@@ -31,14 +31,44 @@ function Setter({ gameId, playerId, game }) {
   const incorrectGuesses = game?.guesses || [];
   const aiHintToShow = latestAiHint || game?.aiHint || "";
 
+  function Countdown({ timeExpires }) {
+    const [seconds, setSeconds] = useState(() => {
+      if (!timeExpires) return null;
+      return Math.max(0, Math.ceil((new Date(timeExpires).getTime() - Date.now()) / 1000));
+    });
+
+    useEffect(() => {
+      if (!timeExpires) {
+        setSeconds(null);
+        return;
+      }
+      const update = () => {
+        const s = Math.max(0, Math.ceil((new Date(timeExpires).getTime() - Date.now()) / 1000));
+        setSeconds(s);
+      };
+      update();
+      const iv = setInterval(update, 1000);
+      return () => clearInterval(iv);
+    }, [timeExpires]);
+
+    if (seconds === null) return null;
+
+    return (
+      <div className="text-xs uppercase tracking-widest text-on-surface-variant text-right">
+        Time left: <span className="text-primary font-bold ml-1">{seconds}s</span>
+      </div>
+    );
+  }
+
   return (
     <div className="bg-surface text-on-surface font-body min-h-screen overflow-x-hidden">
       <header className="fixed top-0 w-full z-50 bg-slate-950/60 backdrop-blur-xl border-b border-white/10 shadow-[0_8px_32px_0_rgba(0,0,0,0.37)] flex justify-between items-center px-6 py-4">
         <div className="flex items-center gap-4">
           <h1 className="text-2xl font-bold tracking-tighter text-[#a4ffb9] drop-shadow-[0_0_8px_rgba(164,255,185,0.4)] font-headline">GeoClash</h1>
         </div>
-        <div className="hidden md:flex items-center mr-8">
+        <div className="hidden md:flex flex-col items-end mr-8">
           <span className="text-[#a4ffb9] font-bold border-b-2 border-[#a4ffb9] pb-1 font-headline uppercase tracking-widest text-xs">Set Location</span>
+          <Countdown timeExpires={game?.timeExpires} />
         </div>
       </header>
 

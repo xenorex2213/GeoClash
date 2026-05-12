@@ -29,9 +29,12 @@ const gameSchema = new mongoose.Schema({
 
     currentRound: {
         type: Number,
-        default: 1
+        default: 1,
     },
-
+    timeExpires : {
+        type : Date,
+        default : null
+    },
     lastSetterId: {
         type: String,
         default: null

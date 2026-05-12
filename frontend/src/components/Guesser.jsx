@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Marker, MapContainer, TileLayer, Tooltip, useMapEvents } from "react-leaflet";
 import { divIcon } from "leaflet";
 
@@ -24,6 +24,46 @@ function ClickHandler({ onClick }) {
     }
   });
   return null;
+}
+
+function Countdown({ timeExpires, onExpire }) {
+  const [seconds, setSeconds] = useState(() => {
+    if (!timeExpires) return null;
+    return Math.max(0, Math.ceil((new Date(timeExpires).getTime() - Date.now()) / 1000));
+  });
+  const expiredCalledRef = useRef(false);
+
+  useEffect(() => {
+    if (!timeExpires) {
+      setSeconds(null);
+      return;
+    }
+
+    const update = () => {
+      const s = Math.max(0, Math.ceil((new Date(timeExpires).getTime() - Date.now()) / 1000));
+      setSeconds(s);
+      if (s === 0 && onExpire && !expiredCalledRef.current) {
+        expiredCalledRef.current = true;
+        try {
+          onExpire();
+        } catch (err) {
+          console.error('onExpire handler error', err);
+        }
+      }
+    };
+
+    update();
+    const iv = setInterval(update, 1000);
+    return () => clearInterval(iv);
+  }, [timeExpires, onExpire]);
+
+  if (seconds === null) return null;
+
+  return (
+    <div className="text-xs uppercase tracking-widest text-on-surface-variant">
+      Time left: <span className="text-primary font-bold ml-1">{seconds}s</span>
+    </div>
+  );
 }
 
 function Guesser({ gameId, playerId, game }) {
@@ -62,13 +102,31 @@ function Guesser({ gameId, playerId, game }) {
     });
   };
 
+  const handleForfeit = async (silent = false) => {
+    if (!silent) {
+      if (!confirm("Give up and award this round to setter?")) return;
+    }
+    try {
+      await fetch("/api/game/guess", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ gameId, playerId, forfeit: true })
+      });
+    } catch (err) {
+      console.error("Forfeit error", err);
+    }
+  };
+
   return (
     <div className="bg-surface font-body text-on-surface min-h-screen overflow-hidden">
       <nav className="fixed top-0 w-full z-50 bg-slate-950/60 backdrop-blur-xl border-b border-white/10 flex justify-between items-center px-6 h-16 shadow-[0_0_40px_rgba(164,255,185,0.06)]">
         <div className="flex items-center gap-4">
           <span className="text-2xl font-bold tracking-tighter text-emerald-400 font-headline">GeoClash</span>
         </div>
-        <div className="text-xs uppercase tracking-widest text-on-surface-variant">Guesser • {game?.mode || "-"} mode</div>
+        <div className="flex flex-col items-end text-right">
+          <div className="text-xs uppercase tracking-widest text-on-surface-variant">Guesser • {game?.mode || "-"} mode</div>
+          <Countdown timeExpires={game?.timeExpires} onExpire={() => handleForfeit(true)} />
+        </div>
       </nav>
 
       {game?.mode !== "map" && (
@@ -109,6 +167,7 @@ function Guesser({ gameId, playerId, game }) {
                   <button className="mt-4 w-full py-3 bg-primary text-on-primary font-headline font-bold uppercase tracking-widest rounded shadow-[0_0_20px_rgba(164,255,185,0.2)]" onClick={handleMapGuess}>
                     Submit Location
                   </button>
+                <button onClick={handleForfeit} className="mt-2 w-full py-2 bg-transparent border border-white/10 text-on-surface text-sm rounded hover:bg-white/2">Give Up</button>
                 </div>
 
                 <div className="glass-panel p-6 rounded-xl">

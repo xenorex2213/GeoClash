@@ -37,7 +37,6 @@ function App() {
           });
         }
 
-        // detect round change
         if (game && newGame.currentRound !== game.currentRound) {
           setShowRoundResult(true);
 
